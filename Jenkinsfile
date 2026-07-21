@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh """
                     docker build -t ${SPRING_IMAGE}:${SPRING_TAG} \
-                        --build-arg MODULE=orchard-app .
+                        --build-arg MODULE=orchard-service .
                     docker tag ${SPRING_IMAGE}:${SPRING_TAG} ${SPRING_IMAGE}:latest
                 """
             }
@@ -78,7 +78,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ 流水线执行成功！镜像版本：${SPRING_TAG}，固定构建模块：orchard-app"
+            echo "✅ 流水线执行成功！镜像版本：${SPRING_TAG}，固定构建模块：orchard-service"
         }
         failure {
             echo "❌ 流水线执行失败，请查看构建日志排查问题"
