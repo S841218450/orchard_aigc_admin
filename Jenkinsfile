@@ -10,13 +10,13 @@ pipeline {
         DEPLOY_HOST = '134.175.217.240'
         DEPLOY_USER = 'root'
         // 支持页面参数化构建，默认打包 orchard-app
-        TARGET_MODULE = params.TARGET_MODULE ?: 'orchard-app'
+        TARGET_MODULE = ''
     }
 
     // 开启参数化构建，页面可选择打包模块
-    parameters {
-        string(name: 'TARGET_MODULE', defaultValue: 'orchard-app', description: '指定构建微服务模块')
-    }
+//     parameters {
+//         string(name: 'TARGET_MODULE', defaultValue: 'orchard-app', description: '指定构建微服务模块')
+//     }
     
     options {
         timestamps()
