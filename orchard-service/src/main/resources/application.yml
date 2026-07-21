@@ -1,0 +1,104 @@
+# 服务器配置
+server:
+  port: 48080
+  tomcat:
+    max-http-form-post-size: -1
+spring:
+
+  application:
+    name: orchard-service
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/orchard2026?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+    hikari:
+      minimum-idle: 5          # 最小空闲连接数
+      maximum-pool-size: 20    # 最大连接数
+      idle-timeout: 300000     # 空闲连接超时时间（5分钟）
+      max-lifetime: 1800000    # 连接最大存活时间（30分钟）
+      connection-timeout: 30000 # 连接超时时间（30秒）
+      validation-timeout: 5000 # 验证超时时间（5秒）
+  # Redis 配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 10000ms         # 连接超时时间（10秒）
+      connect-timeout: 10000ms # 连接建立超时时间
+      lettuce:
+        pool:
+          max-active: 16       # 连接池最大连接数
+          max-idle: 8          # 连接池最大空闲连接数
+          min-idle: 2          # 连接池最小空闲连接数
+          max-wait: 10000ms    # 连接池最大阻塞等待时间（10秒）
+        shutdown-timeout: 100ms # 关闭超时时间
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Swagger/SpringDoc 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  packages-to-scan: com.example
+  paths-to-match: /**
+
+# JWT 配置
+jwt:
+  secret: ${JWT_SECRET:orchard2026-secret-key-must-be-at-least-256-bits-long-for-hs256}
+  expiration: 86400  # 令牌过期时间（秒），默认24小时
+  refresh-token-expiration: 2592000 # 刷新令牌过期时间（秒），默认30天
+# 第三方登录 OAuth 配置
+oauth:
+  redirect-uri: ${OAUTH_REDIRECT_URI:http://localhost:3000/login/callback}
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    app-secret: ${WECHAT_APP_SECRET:}
+  alipay:
+    app-id: ${ALIPAY_APP_ID:}
+    alipay-public-key: ${ALIPAY_PUBLIC_KEY:}
+    private-key: ${ALIPAY_PRIVATE_KEY:}
+  github:
+    client-id: ${GITHUB_CLIENT_ID:}
+    client-secret: ${GITHUB_CLIENT_SECRET:}
+
+# AI Python 服务配置
+ai:
+  python:
+    url: http://localhost:8000
+
+# 腾讯云 COS 配置
+cos:
+  secret-id: ${COS_SECRET_ID:}
+  secret-key: ${COS_SECRET_KEY:}
+  region: ap-guangzhou
+  bucket: ${COS_BUCKET_NAME:}
+  domain: ${COS_DOMAIN:}
+  max-file-size: 52428800  # 50MB
+  min-file-size: 1024      # 1KB
+  multipart-threshold: 8388608  # 8MB
+  part-size: 8388608  # 8MB
+
+# 日志配置（使用 log4j2.xml 配置文件）
+logging:
+  config: classpath:log4j2.xml

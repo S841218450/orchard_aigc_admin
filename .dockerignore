@@ -1,0 +1,21 @@
+# 忽略IDE文件
+.idea/
+*.iml
+.vscode/
+
+# 忽略日志文件
+logs/
+*.log
+
+# 忽略构建产物（各模块的target目录会在构建时重新生成）
+orchard-*/target/
+
+# 忽略.git目录
+.git/
+.gitattributes
+.gitignore
+
+# 忽略其他不需要的文件
+*.md
+HELP.md
+.trae/

@@ -1,0 +1,13 @@
+2026-07-21 10:05:09.737 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - Starting OrchardServiceApplication using Java 21.0.8 with PID 30912 (E:\work\myProject\orchard2026\orchard-service\target\classes started by syh in E:\work\myProject\orchard2026)
+2026-07-21 10:05:09.742 [main] [] DEBUG com.example.orchard_service.OrchardServiceApplication - Running with Spring Boot v3.5.15, Spring v6.2.19
+2026-07-21 10:05:09.744 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-21 10:05:11.766 [main] [] INFO  com.example.orchardauth.config.SslConfig - SSL 配置已初始化（开发模式：跳过证书验证）
+2026-07-21 10:14:15.294 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - Starting OrchardServiceApplication using Java 21.0.8 with PID 37912 (E:\work\myProject\orchard2026\orchard-service\target\classes started by syh in E:\work\myProject\orchard2026)
+2026-07-21 10:14:15.295 [main] [] DEBUG com.example.orchard_service.OrchardServiceApplication - Running with Spring Boot v3.5.15, Spring v6.2.19
+2026-07-21 10:14:15.297 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-21 10:14:17.103 [main] [] INFO  com.example.orchardauth.config.SslConfig - SSL 配置已初始化（开发模式：跳过证书验证）
+2026-07-21 10:15:35.856 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - Starting OrchardServiceApplication using Java 21.0.8 with PID 24212 (E:\work\myProject\orchard2026\orchard-service\target\classes started by syh in E:\work\myProject\orchard2026)
+2026-07-21 10:15:35.857 [main] [] DEBUG com.example.orchard_service.OrchardServiceApplication - Running with Spring Boot v3.5.15, Spring v6.2.19
+2026-07-21 10:15:35.859 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-21 10:15:37.608 [main] [] INFO  com.example.orchardauth.config.SslConfig - SSL 配置已初始化（开发模式：跳过证书验证）
+2026-07-21 10:15:39.279 [main] [] INFO  com.example.orchard_service.OrchardServiceApplication - Started OrchardServiceApplication in 3.842 seconds (process running for 4.53)
