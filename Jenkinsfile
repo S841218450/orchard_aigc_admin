@@ -57,10 +57,14 @@ pipeline {
             steps {
                 sshagent(credentials: ['ssh-deploy-credentials']) {
                     sh """
-                        ssh ${DEPLOY_USER}@${DEPLOY_HOST} "
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
+                            set -euo pipefail
+                            echo "=== 开始清理旧容器 ==="
                             docker stop orchard2026 || true
                             docker rm orchard2026 || true
+                            echo "=== 拉取镜像 ==="
                             docker pull ${DOCKER_REGISTRY}/${SPRING_IMAGE}:${SPRING_TAG}
+                            echo "=== 启动新容器 ==="
                             docker run -d --name orchard2026 \
                                 -p 48080:48080 \
                                 -v /home/www/orchard_aigc_admin/logs:/app/logs \
@@ -68,8 +72,10 @@ pipeline {
                                 --env-file /home/www/orchard_aigc_admin/.env \
                                 --restart unless-stopped \
                                 ${DOCKER_REGISTRY}/${SPRING_IMAGE}:${SPRING_TAG}
+                            echo "=== 容器启动完成，查看运行状态 ==="
+                            docker ps | grep orchard2026
                             docker image prune -f
-                        "
+                        '
                     """
                 }
             }
