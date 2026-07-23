@@ -1,5 +1,6 @@
 package com.example.orchardai.dto;
 
+import com.example.orchardai.enums.WorkStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -10,6 +11,6 @@ public class AiWorkUpdateDto {
     @Schema(description = "结果URL")
     private String resultUrl;
 
-    @Schema(description = "状态：0-待生成 1-生成中 2-已完成 3-失败")
-    private Integer status;
+    @Schema(description = "状态")
+    private WorkStatusEnum status;
 }

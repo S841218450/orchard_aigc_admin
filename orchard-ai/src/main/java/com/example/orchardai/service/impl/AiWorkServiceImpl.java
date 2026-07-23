@@ -110,8 +110,8 @@ public class AiWorkServiceImpl extends ServiceImpl<AiWorkMapper, AiWork> impleme
         if (dto.getResultUrl() != null) {
             work.setResultUrl(dto.getResultUrl());
         }
-        if (dto.getStatus() != null) {
-            work.setStatus(dto.getStatus());
+        if (dto.getStatus() != null && dto.getStatus().getCode() != work.getStatus()) {
+            work.setStatus(dto.getStatus().getCode());
         }
         work.setUpdateTime(LocalDateTime.now());
         updateById(work);
@@ -123,8 +123,33 @@ public class AiWorkServiceImpl extends ServiceImpl<AiWorkMapper, AiWork> impleme
         if (work == null) {
             throw new RuntimeException("作品不存在");
         }
+        if (status.getCode() == work.getStatus()) {
+            throw new RuntimeException("已是当前状态");
+        }
+        work.setStatus(status.getCode());
+        work.setOperationData(null); //清空待操作的数据
+        work.setUpdateTime(LocalDateTime.now());
+        updateById(work);
+    }
+
+    @Override
+    public void updateStatusWithOperationData(Long id, WorkStatusEnum status, Object operationData) {
+        AiWork work = getById(id);
+        if (work == null) {
+            throw new RuntimeException("作品不存在");
+        }
         work.setStatus(status.getCode());
         work.setUpdateTime(LocalDateTime.now());
+
+        // 保存待操作数据
+        if (operationData != null) {
+            try {
+                work.setOperationData(objectMapper.writeValueAsString(operationData));
+            } catch (JsonProcessingException e) {
+                log.error("序列化operationData失败", e);
+            }
+        }
+
         updateById(work);
     }
 
@@ -145,6 +170,15 @@ public class AiWorkServiceImpl extends ServiceImpl<AiWorkMapper, AiWork> impleme
             }
         }
         vo.setResultUrl(work.getResultUrl());
+
+        // 解析待操作数据
+        if (work.getOperationData() != null) {
+            try {
+                vo.setOperationData(objectMapper.readValue(work.getOperationData(), new TypeReference<Object>() {}));
+            } catch (JsonProcessingException e) {
+                log.error("反序列化operationData失败", e);
+            }
+        }
 
         return vo;
     }

@@ -4,7 +4,8 @@ server:
   tomcat:
     max-http-form-post-size: -1
 spring:
-
+  profiles:
+    active: local
   application:
     name: orchard-service
 

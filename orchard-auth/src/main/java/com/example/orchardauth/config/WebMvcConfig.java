@@ -19,16 +19,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/auth/login/**",      // 登录接口
-                        "/auth/register",      // 注册接口
-                        "/auth/sms/send",      // 发送验证码
-                        "/auth/refresh",       // 刷新Token
-                        "/auth/oauth/**",      // 第三方登录
-                        "/swagger-ui.html",    // Swagger UI 入口
-                        "/swagger-ui/**",      // Swagger UI 资源
-                        "/v3/api-docs/**",     // OpenAPI 文档
-                        "/favicon.ico",        // 图标
-                        "/error"               // 错误页面
+                        "/admin-api/auth/login/**",      // 登录接口
+                        "/admin-api/auth/register",      // 注册接口
+                        "/admin-api/auth/sms/send",      // 发送验证码
+                        "/admin-api/auth/refresh",       // 刷新Token
+                        "/admin-api/auth/oauth/**",      // 第三方登录
+                        "/swagger-ui.html",              // Swagger UI 入口
+                        "/swagger-ui/**",                // Swagger UI 资源
+                        "/v3/api-docs/**",               // OpenAPI 文档
+                        "/favicon.ico",                  // 图标
+                        "/error"                         // 错误页面
                 );
     }
     @Override

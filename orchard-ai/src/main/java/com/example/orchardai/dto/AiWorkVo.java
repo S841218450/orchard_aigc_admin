@@ -27,8 +27,11 @@ public class AiWorkVo {
     @Schema(description = "结果URL")
     private String resultUrl;
 
-    @Schema(description = "状态：0-待生成 1-生成中 2-已完成 3-失败")
+    @Schema(description = "状态：0-待生成 1-生成中 2-已完成 3-失败 4-待操作")
     private Integer status;
+
+    @Schema(description = "待操作数据（如选择列表）")
+    private Object operationData;
 
     @Schema(description = "创建时间（时间戳）")
     private Long createTime;

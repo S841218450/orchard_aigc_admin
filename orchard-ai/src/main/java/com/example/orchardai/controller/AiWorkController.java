@@ -30,7 +30,7 @@ public class AiWorkController {
     }
 
     @Operation(summary = "获取作品详情")
-    @GetMapping("/detail/{id}")
+    @GetMapping("/detail")
     public Result<AiWorkVo> detail(@PathVariable Long id) {
         return Result.ok(aiWorkService.getDetail(id));
     }
@@ -42,6 +42,7 @@ public class AiWorkController {
     }
 
     @Operation(summary = "更新作品")
+    @PublicApi
     @PutMapping("/update/{id}")
     public Result<Void> update(@PathVariable Long id, @RequestBody AiWorkUpdateDto dto) {
         aiWorkService.update(id, dto);
@@ -75,8 +76,8 @@ public class AiWorkController {
     @PublicApi
     @Operation(summary = "更新作品状态为待操作")
     @PutMapping("/pending/{id}")
-    public Result<Void> pending(@PathVariable Long id) {
-        aiWorkService.updateStatus(id, WorkStatusEnum.PENDING_OPERATION);
+    public Result<Void> pending(@PathVariable Long id, @RequestBody Object operationData) {
+        aiWorkService.updateStatusWithOperationData(id, WorkStatusEnum.PENDING_OPERATION, operationData);
         return Result.ok();
     }
 

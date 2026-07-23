@@ -16,24 +16,24 @@ public class PageResult<T> {
     private List<T> list;
 
     @Schema(description = "每页大小")
-    private long size;
+    private int size;
 
     @Schema(description = "当前页码")
-    private long current;
+    private int current;
 
     public static <T> PageResult<T> of(Page<T> page) {
         PageResult<T> result = new PageResult<>();
         result.setList(page.getRecords());
-        result.setSize(page.getSize());
-        result.setCurrent(page.getCurrent());
+        result.setSize((int) page.getSize());
+        result.setCurrent((int) page.getCurrent());
         return result;
     }
 
     public static <T, R> PageResult<R> of(Page<T> page, Function<T, R> converter) {
         PageResult<R> result = new PageResult<>();
         result.setList(page.getRecords().stream().map(converter).collect(Collectors.toList()));
-        result.setSize(page.getSize());
-        result.setCurrent(page.getCurrent());
+        result.setSize((int) page.getSize());
+        result.setCurrent((int) page.getCurrent());
         return result;
     }
 }

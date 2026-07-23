@@ -1,5 +1,6 @@
 package com.example.orchardfile.controller;
 
+import com.example.orchardcommon.annotation.PublicApi;
 import com.example.orchardcommon.result.Result;
 import com.example.orchardfile.service.FileFolderService;
 import com.example.orchardfile.service.FileUploadService;
@@ -28,6 +29,7 @@ public class FileController {
     private final FileFolderService fileFolderService;
 
     @Operation(summary = "上传文件")
+    @PublicApi
     @PostMapping("/upload")
     public Result<FileUploadVo> uploadFile(
             @RequestParam("file") MultipartFile file,

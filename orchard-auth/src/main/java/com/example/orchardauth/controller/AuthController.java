@@ -8,7 +8,6 @@ import com.example.orchardauth.vo.LoginVo;
 import com.example.orchardauth.vo.OAuthBinddingVo;
 import com.example.orchardauth.vo.UserInfoVo;
 import com.example.orchardcommon.annotation.LogOperation;
-import com.example.orchardcommon.annotation.PublicApi;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +33,7 @@ public class AuthController {
     private SmsCodeService smsCodeService;
 
     @Operation(summary = "发送验证码")
-    @PublicApi
+    
     @LogOperation(module = "认证", type = "发送验证码", description = "发送手机验证码")
     @PostMapping("/sms/send")
     public Result<Void> sendSmsCode(@RequestParam String phone) {
@@ -43,7 +42,7 @@ public class AuthController {
     }
 
     @Operation(summary = "手机号+密码登录")
-    @PublicApi
+    
     @LogOperation(module = "认证", type = "登录", description = "手机号密码登录")
     @PostMapping("/login/password")
     public Result<LoginVo> loginByPassword(@Valid @RequestBody LoginByPasswordDto dto) {
@@ -52,7 +51,7 @@ public class AuthController {
     }
 
     @Operation(summary = "手机号+验证码登录")
-    @PublicApi
+    
     @LogOperation(module = "认证", type = "登录", description = "手机号验证码登录")
     @PostMapping("/login/sms")
     public Result<LoginVo> loginBySms(@Valid @RequestBody LoginBySmsDto dto) {
@@ -61,7 +60,7 @@ public class AuthController {
     }
 
     @Operation(summary = "注册")
-    @PublicApi
+    
     @LogOperation(module = "认证", type = "注册", description = "用户注册")
     @PostMapping("/register")
     public Result<Void> register(@Valid @RequestBody RegisterDto dto) {
@@ -70,7 +69,7 @@ public class AuthController {
     }
 
     @Operation(summary = "刷新Token")
-    @PublicApi
+    
     @LogOperation(module = "认证", type = "刷新Token", description = "刷新访问令牌")
     @PostMapping("/refresh")
     public Result<LoginVo> refreshToken(@Valid @RequestBody RefreshTokenDto dto) {
@@ -97,7 +96,6 @@ public class AuthController {
     }
 
     @Operation(summary = "获取第三方登录授权URL")
-    @PublicApi
     @LogOperation(module = "认证", type = "OAuth", description = "获取第三方登录授权URL")
     @GetMapping("/oauth/url")
     public Result<String> getOAuthUrl(@RequestParam String oauthType) {
@@ -106,7 +104,6 @@ public class AuthController {
     }
 
     @Operation(summary = "第三方登录回调")
-    @PublicApi
     @LogOperation(module = "认证", type = "OAuth", description = "第三方登录回调")
     @GetMapping("/oauth/callback")
     public Result<LoginVo> oauthCallback(@RequestParam(required = false) String oauthType,

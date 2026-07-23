@@ -21,5 +21,7 @@ public interface AiWorkService extends IService<AiWork> {
 
     void updateStatus(Long id, WorkStatusEnum status);
 
+    void updateStatusWithOperationData(Long id, WorkStatusEnum status, Object operationData);
+
     void delete(Long id);
 }

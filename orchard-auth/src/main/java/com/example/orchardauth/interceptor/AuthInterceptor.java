@@ -20,17 +20,28 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.debug("AuthInterceptor - 请求路径: {}, handler类型: {}", request.getRequestURI(), handler.getClass().getName());
+        
         if (handler instanceof HandlerMethod handlerMethod) {
+            log.debug("AuthInterceptor - 方法: {}, 类: {}", handlerMethod.getMethod().getName(), handlerMethod.getBeanType().getName());
+            log.debug("AuthInterceptor - hasPublicApi注解: {}, hasInternalApi注解: {}", 
+                    handlerMethod.hasMethodAnnotation(PublicApi.class),
+                    handlerMethod.hasMethodAnnotation(InternalApi.class));
+            
             // 检查是否为 @PublicApi 注解的接口（完全跳过鉴权）
             if (handlerMethod.hasMethodAnnotation(PublicApi.class)
                     || handlerMethod.getBeanType().isAnnotationPresent(PublicApi.class)) {
+                log.info("AuthInterceptor - 跳过鉴权（@PublicApi）: {}", request.getRequestURI());
                 return true;
             }
             // 检查是否为 @InternalApi 注解的接口（跳过用户鉴权，由切面校验服务密钥）
             if (handlerMethod.hasMethodAnnotation(InternalApi.class)
                     || handlerMethod.getBeanType().isAnnotationPresent(InternalApi.class)) {
+                log.info("AuthInterceptor - 跳过用户鉴权（@InternalApi）: {}", request.getRequestURI());
                 return true;
             }
+        } else {
+            log.warn("AuthInterceptor - handler不是HandlerMethod类型: {}", handler.getClass().getName());
         }
 
         // 获取 token
