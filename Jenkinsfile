@@ -6,7 +6,6 @@ pipeline {
         SPRING_TAG = "${env.BUILD_NUMBER}"
         DEPLOY_HOST = '134.175.217.240'
         DEPLOY_USER = 'root'
-        # 临时镜像包名称
         IMAGE_TAR = "${SPRING_IMAGE}-${SPRING_TAG}.tar"
     }
 
