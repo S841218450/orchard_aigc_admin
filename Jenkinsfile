@@ -16,9 +16,18 @@ pipeline {
     }
 
     stages {
+
         stage('拉取代码 Checkout') {
             steps {
                 checkout scm
+                sh """
+                    echo "=== git 当前分支名称 ==="
+                    git rev-parse --abbrev-ref HEAD
+                    echo "=== env.BRANCH_NAME 变量 ==="
+                    echo ${env.BRANCH_NAME}
+                    echo "=== git 状态 ==="
+                    git status
+                """
             }
         }
 
@@ -33,7 +42,14 @@ pipeline {
         }
 
         stage('推送镜像到阿里云仓库 Push Images') {
-            when { branch 'main' }
+            // ========== 改动：替换原生branch判断为git命令实时检测 ==========
+            when {
+                expression {
+                    String currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    println("【分支检测】当前构建分支：" + currentBranch)
+                    return currentBranch == 'main'
+                }
+            }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-registry-credentials',
@@ -53,7 +69,14 @@ pipeline {
         }
 
         stage('远程部署 Deploy') {
-            when { branch 'main' }
+            // ========== 改动：替换原生branch判断为git命令实时检测 ==========
+            when {
+                expression {
+                    String currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    println("【分支检测】当前构建分支：" + currentBranch)
+                    return currentBranch == 'main'
+                }
+            }
             steps {
                 sshagent(credentials: ['ssh-deploy-credentials']) {
                     sh """
