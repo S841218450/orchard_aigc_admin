@@ -21,12 +21,10 @@ pipeline {
             steps {
                 checkout scm
                 sh """
-                    echo "=== git 当前分支名称 ==="
+                    echo "=== git本地指针 ==="
                     git rev-parse --abbrev-ref HEAD
-                    echo "=== env.BRANCH_NAME 变量 ==="
-                    echo ${env.BRANCH_NAME}
-                    echo "=== git 状态 ==="
-                    git status
+                    echo "=== WebHook原始推送分支 GIT_BRANCH ==="
+                    echo ${env.GIT_BRANCH}
                 """
             }
         }
@@ -42,15 +40,15 @@ pipeline {
         }
 
         stage('推送镜像到阿里云仓库 Push Images') {
-            // ========== 改动：替换原生branch判断为git命令实时检测 ==========
-            when {
-                expression {
-                    String currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    println("【分支检测】当前构建分支：" + currentBranch)
-                    return currentBranch == 'main'
-                }
-            }
+            // ❗删掉when，在脚本内部判断分支
             steps {
+                sh """
+                    echo "【推送阶段】本次推送分支: ${env.GIT_BRANCH}"
+                    if [ "${env.GIT_BRANCH}" != "main" ]; then
+                        echo "非main分支，跳过推送镜像"
+                        exit 0
+                    fi
+                """
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-registry-credentials',
                     usernameVariable: 'DOCKER_USER',
@@ -69,15 +67,15 @@ pipeline {
         }
 
         stage('远程部署 Deploy') {
-            // ========== 改动：替换原生branch判断为git命令实时检测 ==========
-            when {
-                expression {
-                    String currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    println("【分支检测】当前构建分支：" + currentBranch)
-                    return currentBranch == 'main'
-                }
-            }
+            // ❗删掉when，在脚本内部判断分支
             steps {
+                sh """
+                    echo "【部署阶段】本次推送分支: ${env.GIT_BRANCH}"
+                    if [ "${env.GIT_BRANCH}" != "main" ]; then
+                        echo "非main分支，跳过远程部署"
+                        exit 0
+                    fi
+                """
                 sshagent(credentials: ['ssh-deploy-credentials']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
@@ -95,7 +93,7 @@ pipeline {
                                 --env-file /home/www/orchard_aigc_admin/.env \
                                 --restart unless-stopped \
                                 ${DOCKER_REGISTRY}/${SPRING_IMAGE}:${SPRING_TAG}
-                            echo "=== 容器启动完成，查看运行状态 ==="
+                            echo "=== 容器启动完成 ==="
                             docker ps | grep orchard2026
                             docker image prune -f
                         '
@@ -107,7 +105,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ 流水线执行成功！镜像版本：${SPRING_TAG}，固定构建模块：orchard-service"
+            echo "✅ 流水线执行成功！镜像版本：${SPRING_TAG}"
         }
         failure {
             echo "❌ 流水线执行失败，请查看构建日志排查问题"
