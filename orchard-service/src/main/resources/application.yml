@@ -71,6 +71,7 @@ jwt:
   refresh-token-expiration: 2592000 # 刷新令牌过期时间（秒），默认30天
 # 第三方登录 OAuth 配置
 oauth:
+  timeout: ${OAUTH_TIMEOUT:15000}      # 第三方请求超时时间（毫秒），默认15秒
   redirect-uri: ${OAUTH_REDIRECT_URI:http://localhost:3000/loginCallback}
   wechat:
     app-id: ${WECHAT_APP_ID:}

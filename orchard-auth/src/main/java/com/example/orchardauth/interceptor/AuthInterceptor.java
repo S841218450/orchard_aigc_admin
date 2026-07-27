@@ -24,9 +24,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         
         if (handler instanceof HandlerMethod handlerMethod) {
             log.debug("AuthInterceptor - 方法: {}, 类: {}", handlerMethod.getMethod().getName(), handlerMethod.getBeanType().getName());
-            log.debug("AuthInterceptor - hasPublicApi注解: {}, hasInternalApi注解: {}", 
-                    handlerMethod.hasMethodAnnotation(PublicApi.class),
-                    handlerMethod.hasMethodAnnotation(InternalApi.class));
+            boolean methodHasPublic = handlerMethod.hasMethodAnnotation(PublicApi.class);
+            boolean classHasPublic = handlerMethod.getBeanType().isAnnotationPresent(PublicApi.class);
+            boolean methodHasInternal = handlerMethod.hasMethodAnnotation(InternalApi.class);
+            boolean classHasInternal = handlerMethod.getBeanType().isAnnotationPresent(InternalApi.class);
+            log.debug("AuthInterceptor - PublicApi[方法:{}, 类:{}], InternalApi[方法:{}, 类:{}]",
+                    methodHasPublic, classHasPublic, methodHasInternal, classHasInternal);
             
             // 检查是否为 @PublicApi 注解的接口（跳过强制鉴权，但尝试解析token）
             if (handlerMethod.hasMethodAnnotation(PublicApi.class)

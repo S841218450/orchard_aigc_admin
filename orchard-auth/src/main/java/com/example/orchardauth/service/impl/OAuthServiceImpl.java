@@ -65,6 +65,9 @@ public class OAuthServiceImpl implements OAuthService {
     @Value("${oauth.github.client-secret:}")
     private String githubClientSecret;
 
+    @Value("${oauth.timeout:15000}")
+    private int oauthTimeout;
+
     @Override
     public String getAuthorizationUrl(String oauthType) {
         AuthRequest authRequest = getAuthRequest(oauthType);
@@ -255,16 +258,27 @@ public class OAuthServiceImpl implements OAuthService {
         authCallback.setCode(code);
         authCallback.setState(state);
 
-        AuthResponse<AuthUser> response = authRequest.login(authCallback);
-        if (!response.ok()) {
-            throw new RuntimeException("第三方登录失败：" + response.getMsg());
-        }
+        log.info("开始获取第三方用户信息：type={}, timeout={}ms", oauthType, oauthTimeout);
+        long start = System.currentTimeMillis();
+        try {
+            AuthResponse<AuthUser> response = authRequest.login(authCallback);
+            long cost = System.currentTimeMillis() - start;
+            log.info("第三方登录响应：type={}, 耗时={}ms, success={}, msg={}",
+                    oauthType, cost, response.ok(), response.getMsg());
+            if (!response.ok()) {
+                throw new RuntimeException("第三方登录失败：" + response.getMsg());
+            }
 
-        AuthUser authUser = response.getData();
-        log.info("获取第三方用户信息成功：type={}, openId={}, nickname={}", 
-                oauthType, authUser.getUuid(), authUser.getNickname());
-        
-        return authUser;
+            AuthUser authUser = response.getData();
+            log.info("获取第三方用户信息成功：type={}, openId={}, nickname={}", 
+                    oauthType, authUser.getUuid(), authUser.getNickname());
+            
+            return authUser;
+        } catch (RuntimeException e) {
+            long cost = System.currentTimeMillis() - start;
+            log.error("获取第三方用户信息失败：type={}, 耗时={}ms, 错误={}", oauthType, cost, e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -306,16 +320,17 @@ public class OAuthServiceImpl implements OAuthService {
                         .clientId(wechatAppId)
                         .clientSecret(wechatAppSecret)
                         .redirectUri(redirectUri)
+                        .timeout(oauthTimeout)
                         .build();
                 yield new AuthWeChatOpenRequest(config);
             }
             case "alipay" -> {
                 AuthConfig config = AuthConfig.builder()
                         .clientId(alipayAppId)
-//                        .clientSecret(alipayPrivateKey)
-//                        .alipayPublicKey(alipayPublicKey)
-                        .clientSecret(alipayPublicKey)
+                        .clientSecret(alipayPrivateKey)
+                        .alipayPublicKey(alipayPublicKey)
                         .redirectUri(redirectUri)
+                        .timeout(oauthTimeout)
                         .build();
                 yield new AuthAlipayRequest(config);
             }
@@ -324,6 +339,7 @@ public class OAuthServiceImpl implements OAuthService {
                         .clientId(githubClientId)
                         .clientSecret(githubClientSecret)
                         .redirectUri(redirectUri)
+                        .timeout(oauthTimeout)
                         .build();
                 yield new AuthGithubRequest(config);
             }
