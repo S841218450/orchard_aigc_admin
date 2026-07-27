@@ -21,6 +21,9 @@ public class ChatMessage extends baseEntity {
     @Schema(description = "消息内容")
     private String content;
 
+    @Schema(description = "附件JSON")
+    private String attachmentsJson;
+
     @Schema(description = "排序")
     private Integer sort;
 }

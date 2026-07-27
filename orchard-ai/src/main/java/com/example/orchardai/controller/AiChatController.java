@@ -1,14 +1,13 @@
 package com.example.orchardai.controller;
 
 import com.example.orchardai.dto.ChatMessageVo;
+import com.example.orchardai.dto.ChatSendRequest;
 import com.example.orchardai.service.AiChatService;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Tag(name = "AI对话")
 @RestController
@@ -20,13 +19,14 @@ public class AiChatController {
 
     @Operation(summary = "发送用户消息")
     @PostMapping("/send")
-    public Result<ChatMessageVo> send(@RequestParam(required = false) Long sessionId, @RequestParam String message) {
-        return Result.ok(aiChatService.send(sessionId, message));
+    public Result<ChatMessageVo> send(@RequestBody ChatSendRequest request) {
+        return Result.ok(aiChatService.send(request));
     }
 
-    @Operation(summary = "AI对话（SSE流式输出）")
-    @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter chat(@RequestParam Long sessionId) {
-        return aiChatService.chat(sessionId);
+    @Operation(summary = "删除消息")
+    @DeleteMapping("/delete/{messageId}")
+    public Result<Void> delete(@PathVariable Long messageId) {
+        aiChatService.delete(messageId);
+        return Result.ok();
     }
 }

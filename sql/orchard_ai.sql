@@ -19,6 +19,7 @@ CREATE TABLE `t_chat_message` (
   `session_id` bigint NOT NULL COMMENT '会话ID',
   `role` varchar(20) NOT NULL COMMENT '角色：user-用户 assistant-AI',
   `content` text NOT NULL COMMENT '消息内容',
+  `attachments_json` text DEFAULT NULL COMMENT '附件JSON',
   `sort` int NOT NULL DEFAULT 0 COMMENT '排序',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

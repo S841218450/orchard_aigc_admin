@@ -3,6 +3,8 @@ package com.example.orchardai.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Schema(description = "消息VO")
 public class ChatMessageVo {
@@ -18,6 +20,9 @@ public class ChatMessageVo {
 
     @Schema(description = "消息内容")
     private String content;
+
+    @Schema(description = "附件列表")
+    private List<AttachmentDto> attachments;
 
     @Schema(description = "创建时间")
     private Long createTime;

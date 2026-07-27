@@ -1,32 +1,33 @@
 package com.example.orchardai.service.impl;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.orchardai.dto.AttachmentDto;
 import com.example.orchardai.dto.ChatMessageVo;
 import com.example.orchardai.dto.ChatSessionDto;
+import com.example.orchardai.dto.ChatSendRequest;
 import com.example.orchardai.entity.ChatMessage;
 import com.example.orchardai.service.AiChatService;
 import com.example.orchardai.service.ChatMessageService;
 import com.example.orchardai.service.ChatSessionService;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -36,13 +37,16 @@ public class AiChatServiceImpl implements AiChatService {
     @Value("${ai.python.url:http://localhost:8000}")
     private String pythonUrl;
 
-
+    private final ObjectMapper objectMapper;
     private final ChatMessageService chatMessageService;
     private final ChatSessionService chatSessionService;
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     @Override
-    public ChatMessageVo send(Long sessionId, String userMessage) {
+    public ChatMessageVo send(ChatSendRequest request) {
+        Long sessionId = request.getSessionId();
+        String userMessage = request.getMessage();
+        
         // 没有会话ID就新建会话
         if (sessionId == null) {
             sessionId = SnowflakeUtils.nextId(BizCodeEnum.SESSION);
@@ -51,72 +55,51 @@ public class AiChatServiceImpl implements AiChatService {
             chatSessionService.add(sessionId, dto);
         }
         // 保存用户消息并返回
-        return saveMessage(sessionId, "user", userMessage);
+        return saveMessage(sessionId, "user", userMessage, request.getAttachments());
     }
 
     @Override
-    public SseEmitter chat(Long sessionId) {
-        SseEmitter emitter = new SseEmitter(300000L);
-
-        final Long finalSessionId = sessionId;
-        // 获取历史消息
-        List<ChatMessageVo> history = chatMessageService.listBySessionId(finalSessionId);
-        executor.execute(() -> {
-            StringBuilder fullResponse = new StringBuilder();
-            try {
-                // 调用 Python 服务
-                URL url = new URL(pythonUrl + "/chat");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
-
-                // 构建请求体
-                String requestBody = buildRequestBody(finalSessionId, history);
-                conn.getOutputStream().write(requestBody.getBytes(StandardCharsets.UTF_8));
-
-                // 读取 SSE 流
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        if (line.startsWith("data:")) {
-                            String data = line.substring(5).trim();
-                            if ("[DONE]".equals(data)) {
-                                emitter.send(SseEmitter.event().data("[DONE]"));
-                                break;
-                            }
-                            fullResponse.append(data);
-                            emitter.send(SseEmitter.event().data(data));
-                        }
-                    }
-                }
-
-                // 保存 AI 回复
-                saveMessage(finalSessionId, "assistant", fullResponse.toString());
-                emitter.complete();
-
-            } catch (Exception e) {
-                log.error("AI对话异常", e);
-                try {
-                    emitter.send(SseEmitter.event().data("error: " + e.getMessage()));
-                } catch (Exception ex) {
-                    log.error("发送错误消息失败", ex);
-                }
-                emitter.completeWithError(e);
-            }
-        });
-
-        return emitter;
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long messageId) {
+        ChatMessage message = chatMessageService.getById(messageId);
+        if (message == null) {
+            return;
+        }
+        
+        Long sessionId = message.getSessionId();
+        
+        // 删除消息
+        chatMessageService.removeById(messageId);
+        
+        // 判断是否是会话的最后一条消息
+        LambdaQueryWrapper<ChatMessage> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ChatMessage::getSessionId, sessionId);
+        long count = chatMessageService.count(wrapper);
+        
+        // 如果没有消息了，删除会话
+        if (count == 0) {
+            chatSessionService.removeById(sessionId);
+        }
     }
 
     //    保存消息
-    private ChatMessageVo saveMessage(Long sessionId, String role, String content) {
+    private ChatMessageVo saveMessage(Long sessionId, String role, String content, List<AttachmentDto> attachments) {
         ChatMessage msg = new ChatMessage();
+        msg.setId(SnowflakeUtils.nextId(BizCodeEnum.MESSAGE));
         msg.setSessionId(sessionId);
         msg.setRole(role);
         msg.setContent(content);
         msg.setCreateTime(LocalDateTime.now());
+        
+        // 保存附件信息
+        if (attachments != null && !attachments.isEmpty()) {
+            try {
+                msg.setAttachmentsJson(objectMapper.writeValueAsString(attachments));
+            } catch (JsonProcessingException e) {
+                log.error("序列化附件信息失败", e);
+            }
+        }
+        
         chatMessageService.save(msg);
 
         ChatMessageVo vo = new ChatMessageVo();
@@ -125,27 +108,13 @@ public class AiChatServiceImpl implements AiChatService {
         vo.setRole(role);
         vo.setContent(content);
         vo.setCreateTime(LocalDateTimeUtil.toEpochMilli(msg.getCreateTime()));
+        
+        // 设置附件信息到返回对象
+        if (attachments != null && !attachments.isEmpty()) {
+            vo.setAttachments(attachments);
+        }
+        
         return vo;
     }
 
-    private String buildRequestBody(Long sessionId, List<ChatMessageVo> history) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\"session_id\":").append(sessionId).append(",\"messages\":[");
-        for (int i = 0; i < history.size(); i++) {
-            ChatMessageVo msg = history.get(i);
-            if (i > 0) sb.append(",");
-            sb.append("{\"role\":\"").append(msg.getRole())
-              .append("\",\"content\":\"").append(escapeJson(msg.getContent())).append("\"}");
-        }
-        sb.append("]}");
-        return sb.toString();
-    }
-
-    private String escapeJson(String str) {
-        return str.replace("\\", "\\\\")
-                  .replace("\"", "\\\"")
-                  .replace("\n", "\\n")
-                  .replace("\r", "\\r")
-                  .replace("\t", "\\t");
-    }
 }
