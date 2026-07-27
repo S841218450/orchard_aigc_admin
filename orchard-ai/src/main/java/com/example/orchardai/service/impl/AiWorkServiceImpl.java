@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -110,8 +111,19 @@ public class AiWorkServiceImpl extends ServiceImpl<AiWorkMapper, AiWork> impleme
         if (dto.getResultUrl() != null) {
             work.setResultUrl(dto.getResultUrl());
         }
-        if (dto.getStatus() != null && dto.getStatus().getCode() != work.getStatus()) {
-            work.setStatus(dto.getStatus().getCode());
+        if (dto.getPrompt() != null) {
+            work.setPrompt(dto.getPrompt().strip());
+        }
+        if (dto.getDataList() != null) {
+            try {
+                work.setDataList(objectMapper.writeValueAsString(dto.getDataList()));
+                // 自动将最后一张设为resultUrl
+                if (!dto.getDataList().isEmpty()) {
+                    work.setResultUrl(dto.getDataList().get(dto.getDataList().size() - 1));
+                }
+            } catch (JsonProcessingException e) {
+                log.error("序列化dataList失败", e);
+            }
         }
         work.setUpdateTime(LocalDateTime.now());
         updateById(work);
@@ -171,8 +183,17 @@ public class AiWorkServiceImpl extends ServiceImpl<AiWorkMapper, AiWork> impleme
         }
         vo.setResultUrl(work.getResultUrl());
 
+        // 解析结果数据列表
+        if (work.getDataList() != null) {
+            try {
+                vo.setDataList(objectMapper.readValue(work.getDataList(), new TypeReference<List<String>>() {}));
+            } catch (JsonProcessingException e) {
+                log.error("反序列化dataList失败", e);
+            }
+        }
+
         // 解析待操作数据
-        if (work.getOperationData() != null) {
+        if (work.getOperationData() != null && work.getStatus()==WorkStatusEnum.PENDING_OPERATION.getCode()) {
             try {
                 vo.setOperationData(objectMapper.readValue(work.getOperationData(), new TypeReference<Object>() {}));
             } catch (JsonProcessingException e) {

@@ -28,10 +28,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                     handlerMethod.hasMethodAnnotation(PublicApi.class),
                     handlerMethod.hasMethodAnnotation(InternalApi.class));
             
-            // 检查是否为 @PublicApi 注解的接口（完全跳过鉴权）
+            // 检查是否为 @PublicApi 注解的接口（跳过强制鉴权，但尝试解析token）
             if (handlerMethod.hasMethodAnnotation(PublicApi.class)
                     || handlerMethod.getBeanType().isAnnotationPresent(PublicApi.class)) {
                 log.info("AuthInterceptor - 跳过鉴权（@PublicApi）: {}", request.getRequestURI());
+                tryParseUserId(request);
                 return true;
             }
             // 检查是否为 @InternalApi 注解的接口（跳过用户鉴权，由切面校验服务密钥）
@@ -81,5 +82,28 @@ public class AuthInterceptor implements HandlerInterceptor {
         request.setAttribute("phone", phone);
 
         return true;
+    }
+
+    /**
+     * 尝试解析token中的userId（不强制，失败也不拦截）
+     */
+    private void tryParseUserId(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            try {
+                if (jwtUtil.validateToken(token) && "access".equals(jwtUtil.getTokenType(token))) {
+                    Long userId = jwtUtil.getUserId(token);
+                    String phone = jwtUtil.getPhone(token);
+                    if (userId != null) {
+                        request.setAttribute("userId", userId);
+                        request.setAttribute("phone", phone);
+                        log.debug("PublicApi接口解析到userId: {}", userId);
+                    }
+                }
+            } catch (Exception e) {
+                log.debug("PublicApi接口token解析失败，跳过: {}", e.getMessage());
+            }
+        }
     }
 }

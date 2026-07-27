@@ -1,7 +1,6 @@
 package com.example.orchardauth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.orchardauth.entity.OAuthBindding;
 import com.example.orchardauth.mapper.OAuthBinddingMapper;
 import com.example.orchardauth.service.OAuthService;
@@ -42,7 +41,7 @@ public class OAuthServiceImpl implements OAuthService {
     private final JwtUtil jwtUtil;
     private final SmsCodeService smsCodeService;
 
-    @Value("${oauth.redirect-uri:http://localhost:8080/auth/oauth/callback}")
+    @Value("${oauth.redirect-uri:}")
     private String redirectUri;
 
     @Value("${oauth.wechat.app-id:}")

@@ -32,15 +32,15 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
       database: 0
-      timeout: 10000ms         # 连接超时时间（10秒）
-      connect-timeout: 10000ms # 连接建立超时时间
+      timeout: 10000            # 连接超时时间（10秒）
+      connect-timeout: 10000    # 连接建立超时时间
       lettuce:
         pool:
           max-active: 16       # 连接池最大连接数
           max-idle: 8          # 连接池最大空闲连接数
           min-idle: 2          # 连接池最小空闲连接数
-          max-wait: 10000ms    # 连接池最大阻塞等待时间（10秒）
-        shutdown-timeout: 100ms # 关闭超时时间
+          max-wait: 10000      # 连接池最大阻塞等待时间（10秒）
+        shutdown-timeout: 100  # 关闭超时时间
 
 # MyBatis-Plus 配置
 mybatis-plus:
@@ -71,7 +71,7 @@ jwt:
   refresh-token-expiration: 2592000 # 刷新令牌过期时间（秒），默认30天
 # 第三方登录 OAuth 配置
 oauth:
-  redirect-uri: ${OAUTH_REDIRECT_URI:http://localhost:3000/login/callback}
+  redirect-uri: ${OAUTH_REDIRECT_URI:http://localhost:3000/loginCallback}
   wechat:
     app-id: ${WECHAT_APP_ID:}
     app-secret: ${WECHAT_APP_SECRET:}

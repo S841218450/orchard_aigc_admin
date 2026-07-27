@@ -27,8 +27,11 @@ public class AiWork extends baseEntity {
     @Schema(description = "参数JSON")
     private String params;
 
-    @Schema(description = "结果URL")
+    @Schema(description = "结果URL（当前展示图）")
     private String resultUrl;
+
+    @Schema(description = "结果数据列表JSON（多图场景存储所有图片URL）")
+    private String dataList;
 
     @Schema(description = "状态：0-等待中 1-生成中 2-已完成 3-失败 4-待操作")
     private Integer status;

@@ -3,6 +3,8 @@ package com.example.orchardfile.service.impl;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
 import com.example.orchardfile.config.CosConfig;
+import com.example.orchardfile.dto.FileUploadBase64Dto;
+import com.example.orchardfile.dto.FileUploadUrlDto;
 import com.example.orchardfile.entity.FileRecord;
 import com.example.orchardfile.mapper.FileRecordMapper;
 import com.example.orchardfile.service.FileUploadService;
@@ -27,6 +29,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -206,6 +209,213 @@ public class FileUploadServiceImpl implements FileUploadService {
             log.error("大文件分块上传失败：userId={}, error={}", userId, e.getMessage(), e);
             throw new RuntimeException("大文件上传失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    public FileUploadVo uploadFileBase64(String base64, String fileName, Long userId, Long folderId) {
+        try {
+            // 解码Base64
+            byte[] fileBytes = Base64.getDecoder().decode(base64);
+            long fileSize = fileBytes.length;
+
+            // 校验文件大小
+            validateFileSize(fileSize);
+
+            // 生成文件信息
+            String fileType = getFileType(fileName);
+            String generatedFileName = generateFileName(fileName);
+            String cosPath = generateCosPath(userId, generatedFileName);
+
+            // 上传到 COS
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(fileSize);
+            metadata.setContentType(getMimeType(fileType));
+
+            PutObjectRequest putRequest = new PutObjectRequest(
+                    cosConfig.getBucket(),
+                    cosPath,
+                    new ByteArrayInputStream(fileBytes),
+                    metadata
+            );
+            cosClient.putObject(putRequest);
+
+            // 生成访问 URL
+            String fileUrl = generateFileUrl(cosPath);
+
+            // 保存文件记录
+            FileRecord record = new FileRecord();
+            record.setId(SnowflakeUtils.nextId(BizCodeEnum.FILE));
+            record.setUserId(userId);
+            record.setFileName(generatedFileName);
+            record.setOriginalName(fileName);
+            record.setFileType(fileType);
+            record.setMimeType(getMimeType(fileType));
+            record.setFileSize(fileSize);
+            record.setCosPath(cosPath);
+            record.setFileUrl(fileUrl);
+            record.setFolderId(folderId);
+            record.setStatus(1);
+            record.setCreateTime(java.time.LocalDateTime.now());
+
+            fileRecordMapper.insert(record);
+
+            // 返回结果
+            FileUploadVo vo = new FileUploadVo();
+            vo.setFileId(record.getId());
+            vo.setFileName(generatedFileName);
+            vo.setOriginalName(fileName);
+            vo.setFileSize(fileSize);
+            vo.setFileUrl(fileUrl);
+            vo.setFileType(fileType);
+
+            log.info("Base64文件上传成功：userId={}, fileName={}, size={}", userId, fileName, fileSize);
+            return vo;
+
+        } catch (Exception e) {
+            log.error("Base64文件上传失败：userId={}, error={}", userId, e.getMessage(), e);
+            throw new RuntimeException("Base64文件上传失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<FileUploadVo> uploadFileBase64Batch(List<FileUploadBase64Dto> fileList, Long userId, Long defaultFolderId) {
+        List<FileUploadVo> results = new ArrayList<>();
+        for (FileUploadBase64Dto dto : fileList) {
+            Long fileUserId = dto.getUserId() != null ? dto.getUserId() : userId;
+            Long fileFolderId = dto.getFolderId() != null ? dto.getFolderId() : defaultFolderId;
+            FileUploadVo vo = uploadFileBase64(dto.getBase64(), dto.getFileName(), fileUserId, fileFolderId);
+            results.add(vo);
+        }
+        log.info("批量Base64文件上传成功：userId={}, count={}", userId, fileList.size());
+        return results;
+    }
+
+    @Override
+    public FileUploadVo uploadFileByUrl(String url, String fileName, Long userId, Long folderId) {
+        try {
+            // 从URL下载文件
+            java.net.URL fileUrl = new java.net.URL(url);
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) fileUrl.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(30000);
+            connection.connect();
+
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException("下载文件失败，HTTP状态码：" + connection.getResponseCode());
+            }
+
+            // 获取文件内容
+            byte[] fileBytes;
+            try (InputStream inputStream = connection.getInputStream()) {
+                fileBytes = inputStream.readAllBytes();
+            }
+            connection.disconnect();
+
+            long fileSize = fileBytes.length;
+
+            // 校验文件大小
+            validateFileSize(fileSize);
+
+            // 如果未提供文件名，从URL中提取
+            if (fileName == null || fileName.isEmpty()) {
+                String urlPath = fileUrl.getPath();
+                fileName = urlPath.substring(urlPath.lastIndexOf("/") + 1);
+                if (fileName.isEmpty()) {
+                    fileName = "download_" + System.currentTimeMillis();
+                }
+            }
+
+            // 生成文件信息
+            String fileType = getFileType(fileName);
+            String generatedFileName = generateFileName(fileName);
+            String cosPath = generateCosPath(userId, generatedFileName);
+
+            // 上传到 COS
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(fileSize);
+            metadata.setContentType(getMimeType(fileType));
+
+            PutObjectRequest putRequest = new PutObjectRequest(
+                    cosConfig.getBucket(),
+                    cosPath,
+                    new ByteArrayInputStream(fileBytes),
+                    metadata
+            );
+            cosClient.putObject(putRequest);
+
+            // 生成访问 URL
+            String fileAccessUrl = generateFileUrl(cosPath);
+
+            // 保存文件记录
+            FileRecord record = new FileRecord();
+            record.setId(SnowflakeUtils.nextId(BizCodeEnum.FILE));
+            record.setUserId(userId);
+            record.setFileName(generatedFileName);
+            record.setOriginalName(fileName);
+            record.setFileType(fileType);
+            record.setMimeType(getMimeType(fileType));
+            record.setFileSize(fileSize);
+            record.setCosPath(cosPath);
+            record.setFileUrl(fileAccessUrl);
+            record.setFolderId(folderId);
+            record.setStatus(1);
+            record.setCreateTime(java.time.LocalDateTime.now());
+
+            fileRecordMapper.insert(record);
+
+            // 返回结果
+            FileUploadVo vo = new FileUploadVo();
+            vo.setFileId(record.getId());
+            vo.setFileName(generatedFileName);
+            vo.setOriginalName(fileName);
+            vo.setFileSize(fileSize);
+            vo.setFileUrl(fileAccessUrl);
+            vo.setFileType(fileType);
+
+            log.info("URL文件上传成功：userId={}, fileName={}, size={}", userId, fileName, fileSize);
+            return vo;
+
+        } catch (Exception e) {
+            log.error("URL文件上传失败：userId={}, url={}, error={}", userId, url, e.getMessage(), e);
+            throw new RuntimeException("URL文件上传失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<FileUploadVo> uploadFileByUrlBatch(List<FileUploadUrlDto> fileList, Long userId, Long defaultFolderId) {
+        List<FileUploadVo> results = new ArrayList<>();
+        for (FileUploadUrlDto dto : fileList) {
+            Long fileUserId = dto.getUserId() != null ? dto.getUserId() : userId;
+            Long fileFolderId = dto.getFolderId() != null ? dto.getFolderId() : defaultFolderId;
+            FileUploadVo vo = uploadFileByUrl(dto.getUrl(), dto.getFileName(), fileUserId, fileFolderId);
+            results.add(vo);
+        }
+        log.info("批量URL文件上传成功：userId={}, count={}", userId, fileList.size());
+        return results;
+    }
+
+    /**
+     * 获取MIME类型
+     */
+    private String getMimeType(String fileType) {
+        if (fileType == null || fileType.isEmpty()) {
+            return "application/octet-stream";
+        }
+        return switch (fileType.toLowerCase()) {
+            case "jpg", "jpeg" -> "image/jpeg";
+            case "png" -> "image/png";
+            case "gif" -> "image/gif";
+            case "webp" -> "image/webp";
+            case "mp4" -> "video/mp4";
+            case "mp3" -> "audio/mpeg";
+            case "pdf" -> "application/pdf";
+            case "doc" -> "application/msword";
+            case "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            case "xls" -> "application/vnd.ms-excel";
+            case "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            default -> "application/octet-stream";
+        };
     }
 
     /**

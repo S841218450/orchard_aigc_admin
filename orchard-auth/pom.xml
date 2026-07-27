@@ -26,7 +26,6 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <sa-token.version>1.39.0</sa-token.version>
         <jjwt.version>0.12.6</jjwt.version>
         <justauth.version>1.16.6</justauth.version>
     </properties>
@@ -37,22 +36,6 @@
             <artifactId>orchard-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!-- Sa-Token -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot3-starter</artifactId>
-            <version>${sa-token.version}</version>
-        </dependency>
-
-        <!-- Sa-Token Redis (for session storage) -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis-jackson</artifactId>
-            <version>${sa-token.version}</version>
-        </dependency>
-
-
 
         <!-- JWT -->
         <dependency>

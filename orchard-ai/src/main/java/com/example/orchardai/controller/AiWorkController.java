@@ -41,7 +41,7 @@ public class AiWorkController {
         return Result.ok(aiWorkService.listByUser(query));
     }
 
-    @Operation(summary = "更新作品")
+    @Operation(summary = "更新作品（图片/提示词等）")
     @PublicApi
     @PutMapping("/update/{id}")
     public Result<Void> update(@PathVariable Long id, @RequestBody AiWorkUpdateDto dto) {

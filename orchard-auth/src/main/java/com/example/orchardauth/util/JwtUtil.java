@@ -92,7 +92,7 @@ public class JwtUtil {
             parseToken(token);
             return true;
         } catch (ExpiredJwtException e) {
-            log.warn("JWT token expired");
+            log.warn("JWT token 过期");
             return false;
         } catch (JwtException e) {
             log.error("JWT token error: {}", e.getMessage());
