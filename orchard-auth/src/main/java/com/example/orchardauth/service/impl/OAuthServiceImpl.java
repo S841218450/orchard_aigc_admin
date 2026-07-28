@@ -15,6 +15,7 @@ import com.example.orchardusermanagement.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthConfig;
+import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
@@ -331,13 +332,14 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     private AuthRequest getAuthRequest(String oauthType) {
+        HttpConfig httpConfig = HttpConfig.builder().timeout(oauthTimeout).build();
         return switch (oauthType.toLowerCase()) {
             case "wechat" -> {
                 AuthConfig config = AuthConfig.builder()
                         .clientId(wechatAppId)
                         .clientSecret(wechatAppSecret)
                         .redirectUri(redirectUri)
-                        .timeout(oauthTimeout)
+                        .httpConfig(httpConfig)
                         .build();
                 yield new AuthWeChatOpenRequest(config);
             }
@@ -347,7 +349,7 @@ public class OAuthServiceImpl implements OAuthService {
                         .clientSecret(alipayPrivateKey)
                         .alipayPublicKey(alipayPublicKey)
                         .redirectUri(redirectUri)
-                        .timeout(oauthTimeout)
+                        .httpConfig(httpConfig)
                         .build();
                 yield new AuthAlipayRequest(config);
             }
@@ -356,7 +358,7 @@ public class OAuthServiceImpl implements OAuthService {
                         .clientId(githubClientId)
                         .clientSecret(githubClientSecret)
                         .redirectUri(redirectUri)
-                        .timeout(oauthTimeout)
+                        .httpConfig(httpConfig)
                         .build();
                 yield new AuthGithubRequest(config);
             }
