@@ -249,7 +249,7 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     /**
-     * 获取第三方用户信息
+     * 获取第三方用户信息（带重试机制）
      */
     private AuthUser getAuthUser(String oauthType, String code, String state) {
         AuthRequest authRequest = getAuthRequest(oauthType);
@@ -258,27 +258,44 @@ public class OAuthServiceImpl implements OAuthService {
         authCallback.setCode(code);
         authCallback.setState(state);
 
-        log.info("开始获取第三方用户信息：type={}, timeout={}ms", oauthType, oauthTimeout);
-        long start = System.currentTimeMillis();
-        try {
-            AuthResponse<AuthUser> response = authRequest.login(authCallback);
-            long cost = System.currentTimeMillis() - start;
-            log.info("第三方登录响应：type={}, 耗时={}ms, success={}, msg={}",
-                    oauthType, cost, response.ok(), response.getMsg());
-            if (!response.ok()) {
-                throw new RuntimeException("第三方登录失败：" + response.getMsg());
-            }
+        int maxRetries = 2;
+        RuntimeException lastException = null;
 
-            AuthUser authUser = response.getData();
-            log.info("获取第三方用户信息成功：type={}, openId={}, nickname={}", 
-                    oauthType, authUser.getUuid(), authUser.getNickname());
-            
-            return authUser;
-        } catch (RuntimeException e) {
-            long cost = System.currentTimeMillis() - start;
-            log.error("获取第三方用户信息失败：type={}, 耗时={}ms, 错误={}", oauthType, cost, e.getMessage());
-            throw e;
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            log.info("开始获取第三方用户信息：platform={}, attempt={}/{}", oauthType, attempt, maxRetries);
+            long start = System.currentTimeMillis();
+            try {
+                AuthResponse<AuthUser> response = authRequest.login(authCallback);
+                long cost = System.currentTimeMillis() - start;
+                log.info("第三方登录响应：platform={}, attempt={}, cost={}ms, success={}",
+                        oauthType, attempt, cost, response.ok());
+                if (!response.ok()) {
+                    throw new RuntimeException("第三方登录失败：" + response.getMsg());
+                }
+
+                AuthUser authUser = response.getData();
+                log.info("获取第三方用户信息成功：platform={}, openId={}, nickname={}", 
+                        oauthType, authUser.getUuid(), authUser.getNickname());
+                return authUser;
+            } catch (RuntimeException e) {
+                long cost = System.currentTimeMillis() - start;
+                log.warn("获取第三方用户信息失败：platform={}, attempt={}/{}, cost={}ms, error={}",
+                        oauthType, attempt, maxRetries, cost, e.getMessage());
+                lastException = e;
+                if (attempt < maxRetries) {
+                    try {
+                        Thread.sleep(1000L * attempt);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
         }
+
+        String platformName = getOauthTypeName(oauthType);
+        throw new RuntimeException("第三方登录失败（" + platformName + "，已重试" + maxRetries + "次）："
+                + (lastException != null ? lastException.getMessage() : "网络请求失败"));
     }
 
     /**

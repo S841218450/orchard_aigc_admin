@@ -45,7 +45,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return true;
             }
         } else {
-            log.warn("AuthInterceptor - handler不是HandlerMethod类型: {}", handler.getClass().getName());
+            // 静态资源（Swagger UI、favicon、健康检查等），直接放行
+            log.debug("AuthInterceptor - 非HandlerMethod，直接放行: {} [{}]", request.getRequestURI(), handler.getClass().getSimpleName());
+            return true;
         }
 
         // 获取 token

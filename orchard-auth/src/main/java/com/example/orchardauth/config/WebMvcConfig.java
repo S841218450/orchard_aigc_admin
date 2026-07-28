@@ -28,7 +28,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",                // Swagger UI 资源
                         "/v3/api-docs/**",               // OpenAPI 文档
                         "/favicon.ico",                  // 图标
-                        "/error"                         // 错误页面
+                        "/error",                        // 错误页面
+                        "/actuator/**",                  // 健康检查
+                        "/static/**",                    // 静态资源
+                        "/css/**", "/js/**", "/img/**",  // 前端静态文件
+                        "/webjars/**"                    // WebJars
                 );
     }
     @Override
