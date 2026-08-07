@@ -6,6 +6,7 @@ import com.example.orchardauth.service.AuthService;
 import com.example.orchardauth.service.SmsCodeService;
 import com.example.orchardauth.service.TokenBlacklistService;
 import com.example.orchardauth.util.JwtUtil;
+import com.example.orchardauth.util.RsaUtil;
 import com.example.orchardauth.vo.LoginVo;
 import com.example.orchardauth.vo.UserInfoVo;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
@@ -41,8 +42,11 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("用户不存在");
         }
 
-        // 验证密码
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        // 解密前端传来的 RSA 加密密码
+        String rawPassword = decryptPassword(dto.getPassword());
+
+        // 验证密码（BCrypt）
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new RuntimeException("密码错误");
         }
 
@@ -108,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setId(SnowflakeUtils.nextId(BizCodeEnum.USER));
         user.setPhone(dto.getPhone());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(passwordEncoder.encode(decryptPassword(dto.getPassword())));
         user.setNickname(dto.getNickname() != null ? dto.getNickname() : "用户" + dto.getPhone().substring(7));
         user.setAvatar(dto.getAvatar());
         user.setStatus(1);
@@ -229,5 +233,23 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("用户登录成功：userId={}, phone={}", user.getId(), user.getPhone());
         return vo;
+    }
+
+    /**
+     * 解密前端 RSA 加密的密码
+     * <p>
+     * 如果解密失败（比如前端未配置公钥，传的是明文），则直接使用原文，
+     * 兼容本地开发未接 RSA 的场景。
+     */
+    private String decryptPassword(String encrypted) {
+        if (encrypted == null || encrypted.isEmpty()) {
+            return encrypted;
+        }
+        try {
+            return RsaUtil.decrypt(encrypted);
+        } catch (Exception e) {
+            log.warn("RSA 解密失败，当作明文密码处理: {}", e.getMessage());
+            return encrypted;
+        }
     }
 }

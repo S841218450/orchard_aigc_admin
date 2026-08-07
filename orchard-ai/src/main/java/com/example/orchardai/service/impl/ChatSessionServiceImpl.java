@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatSession> implements ChatSessionService {
 
     @Override
-    public void add(Long sessionId, ChatSessionDto dto) {
+    public ChatSessionVo add(Long sessionId, ChatSessionDto dto) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         Long userId = (Long) attributes.getRequest().getAttribute("userId");
         ChatSession session = new ChatSession();
@@ -31,6 +31,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         session.setStatus(1);
         session.setCreateTime(LocalDateTime.now());
         save(session);
+        return toVo(session);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     public List<ChatMessageVo> listBySessionId(Long sessionId) {
         LambdaQueryWrapper<ChatMessage> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ChatMessage::getSessionId, sessionId)
-               .orderByAsc(ChatMessage::getSort);
+               .orderByAsc(ChatMessage::getCreateTime);
         return list(wrapper).stream().map(this::toVo).collect(Collectors.toList());
     }
 
@@ -37,8 +37,10 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         ChatMessageVo vo = new ChatMessageVo();
         vo.setId(msg.getId());
         vo.setSessionId(msg.getSessionId());
-        vo.setRole(msg.getRole());
-        vo.setContent(msg.getContent());
+        vo.setQuestion(msg.getQuestion());
+        vo.setAnswer(msg.getAnswer());
+        vo.setStatus(msg.getStatus());
+        vo.setErrorMsg(msg.getErrorMsg());
         vo.setCreateTime(msg.getCreateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         
         // 解析附件JSON

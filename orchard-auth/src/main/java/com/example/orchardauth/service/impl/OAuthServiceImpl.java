@@ -332,6 +332,47 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     private AuthRequest getAuthRequest(String oauthType) {
+        // 前置校验：redirectUri 必须有效
+        if (redirectUri == null || redirectUri.isBlank()) {
+            throw new RuntimeException("OAuth 回调地址未配置：oauth.redirect-uri（或环境变量 OAUTH_REDIRECT_URI）为空");
+        }
+        if (!redirectUri.startsWith("http://") && !redirectUri.startsWith("https://")) {
+            throw new RuntimeException("OAuth 回调地址格式错误：必须以 http:// 或 https:// 开头，当前值：" + redirectUri);
+        }
+
+        log.info("OAuth配置 - platform={}, redirectUri={}, timeout={}ms", oauthType, redirectUri, oauthTimeout);
+
+        // 各平台凭证校验
+        switch (oauthType.toLowerCase()) {
+            case "wechat" -> {
+                if (wechatAppId == null || wechatAppId.isBlank()) {
+                    throw new RuntimeException("微信登录未配置：oauth.wechat.app-id（或环境变量 WECHAT_APP_ID）为空");
+                }
+                if (wechatAppSecret == null || wechatAppSecret.isBlank()) {
+                    throw new RuntimeException("微信登录未配置：oauth.wechat.app-secret（或环境变量 WECHAT_APP_SECRET）为空");
+                }
+            }
+            case "alipay" -> {
+                if (alipayAppId == null || alipayAppId.isBlank()) {
+                    throw new RuntimeException("支付宝登录未配置：oauth.alipay.app-id（或环境变量 ALIPAY_APP_ID）为空");
+                }
+                if (alipayPrivateKey == null || alipayPrivateKey.isBlank()) {
+                    throw new RuntimeException("支付宝登录未配置：oauth.alipay.private-key（或环境变量 ALIPAY_PRIVATE_KEY）为空");
+                }
+                if (alipayPublicKey == null || alipayPublicKey.isBlank()) {
+                    throw new RuntimeException("支付宝登录未配置：oauth.alipay.alipay-public-key（或环境变量 ALIPAY_PUBLIC_KEY）为空");
+                }
+            }
+            case "github" -> {
+                if (githubClientId == null || githubClientId.isBlank()) {
+                    throw new RuntimeException("GitHub登录未配置：oauth.github.client-id（或环境变量 GITHUB_CLIENT_ID）为空");
+                }
+                if (githubClientSecret == null || githubClientSecret.isBlank()) {
+                    throw new RuntimeException("GitHub登录未配置：oauth.github.client-secret（或环境变量 GITHUB_CLIENT_SECRET）为空");
+                }
+            }
+        }
+
         HttpConfig httpConfig = HttpConfig.builder().timeout(oauthTimeout).build();
         return switch (oauthType.toLowerCase()) {
             case "wechat" -> {
@@ -344,6 +385,7 @@ public class OAuthServiceImpl implements OAuthService {
                 yield new AuthWeChatOpenRequest(config);
             }
             case "alipay" -> {
+                @SuppressWarnings("deprecation")
                 AuthConfig config = AuthConfig.builder()
                         .clientId(alipayAppId)
                         .clientSecret(alipayPrivateKey)
@@ -351,7 +393,13 @@ public class OAuthServiceImpl implements OAuthService {
                         .redirectUri(redirectUri)
                         .httpConfig(httpConfig)
                         .build();
-                yield new AuthAlipayRequest(config);
+                // 绕过 JustAuth 内置的严格重定向校验（支付宝禁止 localhost/http 等测试域名）
+                yield new AuthAlipayRequest(config) {
+                    @Override
+                    protected void check(AuthConfig cfg) {
+                        // 不做 JustAuth 内置的重定向校验，由支付宝平台在授权时自行判断
+                    }
+                };
             }
             case "github" -> {
                 AuthConfig config = AuthConfig.builder()

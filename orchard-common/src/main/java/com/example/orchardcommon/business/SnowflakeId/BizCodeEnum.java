@@ -7,10 +7,12 @@ public enum BizCodeEnum {
     SESSION(2581, "会话ID", "SESS"),
     MESSAGE(2593, "消息", "MSG"),
     WORK(2605, "作品", "WORK"),
+    KB_DOC(2617, "知识库文档", "KBDOC"),
+    ASSET(2629, "素材", "AST"),
 
     //文件系统
     FILE(1080, "文件", "FILE"),
-
+    AIDOC(1081, "知识库文档", "AIDOC"),
     //业务
     USER(5000, "用户", "USER"),
     COMPANY(5001, "公司", "COMP"),

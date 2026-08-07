@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ChatSessionService extends IService<ChatSession> {
 
-    void add(Long sessionId, ChatSessionDto dto);
+    ChatSessionVo add(Long sessionId, ChatSessionDto dto);
 
     void update(Long id, ChatSessionDto dto);
 

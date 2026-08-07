@@ -9,6 +9,9 @@ import java.util.List;
 @Schema(description = "更新AI作品DTO")
 public class AiWorkUpdateDto {
 
+    @Schema(description = "作品ID（更新/状态变更时必填）")
+    private Long id;
+
     @Schema(description = "提示词")
     private String prompt;
 

@@ -26,9 +26,9 @@ public class UserController {
     }
 
     @Operation(summary = "更新用户")
-    @PutMapping("/{id}")
-    public Result<Void> update(@PathVariable Long id, @Valid @RequestBody UserDto dto) {
-        userService.update(id, dto);
+    @PutMapping
+    public Result<Void> update(@Valid @RequestBody UserDto dto) {
+        userService.update(dto.getId(), dto);
         return Result.ok();
     }
 

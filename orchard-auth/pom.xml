@@ -63,6 +63,13 @@
             <version>${justauth.version}</version>
         </dependency>
 
+        <!-- 支付宝官方 SDK（JustAuth AuthAlipayRequest 内部依赖） -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.34.0.ALL</version>
+        </dependency>
+
         <!-- Spring Security Crypto -->
         <dependency>
             <groupId>org.springframework.security</groupId>

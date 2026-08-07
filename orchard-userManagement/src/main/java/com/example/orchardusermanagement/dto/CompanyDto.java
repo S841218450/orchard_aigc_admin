@@ -8,6 +8,9 @@ import lombok.Data;
 @Schema(description = "公司DTO")
 public class CompanyDto {
 
+    @Schema(description = "主键ID（更新时必填）")
+    private Long id;
+
     @NotBlank(message = "公司名称不能为空")
     @Schema(description = "公司名称")
     private String name;

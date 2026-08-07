@@ -26,9 +26,9 @@ public class PlanController {
     }
 
     @Operation(summary = "更新套餐")
-    @PutMapping("/{id}")
-    public Result<Void> update(@PathVariable Long id, @Valid @RequestBody PlanDto dto) {
-        planService.update(id, dto);
+    @PutMapping
+    public Result<Void> update(@Valid @RequestBody PlanDto dto) {
+        planService.update(dto.getId(), dto);
         return Result.ok();
     }
 

@@ -9,6 +9,9 @@ import lombok.Data;
 @Schema(description = "部门DTO")
 public class DepartmentDto {
 
+    @Schema(description = "主键ID（更新时必填）")
+    private Long id;
+
     @NotNull(message = "公司ID不能为空")
     @Schema(description = "所属公司ID")
     private Long companyId;

@@ -26,9 +26,9 @@ public class CompanyController {
     }
 
     @Operation(summary = "更新公司")
-    @PutMapping("/{id}")
-    public Result<Void> update(@PathVariable Long id, @Valid @RequestBody CompanyDto dto) {
-        companyService.update(id, dto);
+    @PutMapping
+    public Result<Void> update(@Valid @RequestBody CompanyDto dto) {
+        companyService.update(dto.getId(), dto);
         return Result.ok();
     }
 

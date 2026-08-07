@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,9 +33,9 @@ public class SmsCodeService {
             throw new RuntimeException("今日验证码发送次数已达上限");
         }
 
-        // 生成6位验证码
-        String code = String.format("%06d", new Random().nextInt(1000000));
-
+        // 生成6位验证码TODO: 随机生成
+        // String code = String.format("%06d", new Random().nextInt(1000000));
+        String code = "123456";
         // 存入Redis，5分钟过期
         String codeKey = SMS_CODE_PREFIX + phone;
         redisTemplate.opsForValue().set(codeKey, code, CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);

@@ -34,12 +34,15 @@ public class FileFolderServiceImpl implements FileFolderService {
 
     @Override
     public Long createFolder(String folderName, Long parentId, Long userId) {
+        // 根目录 id=0 视为顶级目录，parentId 统一转 null
+        Long realParentId = (parentId != null && parentId == 0L) ? null : parentId;
+
         // 检查同级目录下是否已存在同名文件夹
         LambdaQueryWrapper<FileFolder> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(FileFolder::getUserId, userId)
                .eq(FileFolder::getFolderName, folderName)
-               .eq(parentId == null, FileFolder::getParentId, null)
-               .eq(parentId != null, FileFolder::getParentId, parentId);
+               .eq(realParentId == null, FileFolder::getParentId, null)
+               .eq(realParentId != null, FileFolder::getParentId, realParentId);
 
         if (fileFolderMapper.selectCount(wrapper) > 0) {
             throw new RuntimeException("该目录下已存在同名文件夹");
@@ -50,7 +53,7 @@ public class FileFolderServiceImpl implements FileFolderService {
         folder.setId(SnowflakeUtils.nextId(BizCodeEnum.FILE));
         folder.setUserId(userId);
         folder.setFolderName(folderName);
-        folder.setParentId(parentId);
+        folder.setParentId(realParentId);
         folder.setSort(0);
         folder.setStatus(1);
         folder.setCreateTime(LocalDateTime.now());
@@ -74,19 +77,44 @@ public class FileFolderServiceImpl implements FileFolderService {
         // 转换为 VO
         List<FolderTreeVo> allFolders = folders.stream()
                 .map(this::convertToFolderTreeVo)
-                .collect(Collectors.toList());
+                .toList();
 
-        // 构建树形结构
-        return buildTree(allFolders);
+        // 按 parentId 分组（null 和 0 都视为根目录的子节点）
+        Map<Long, List<FolderTreeVo>> parentMap = allFolders.stream()
+                .collect(Collectors.groupingBy(f -> f.getParentId() == null ? 0L : f.getParentId()));
+
+        // 为每个节点填充子目录
+        for (FolderTreeVo folder : allFolders) {
+            List<FolderTreeVo> children = parentMap.get(folder.getId());
+            if (children != null && !children.isEmpty()) {
+                folder.setChildren(children);
+            }
+        }
+
+        // 一级文件夹（parentId 为 null 或 0）作为根目录的 children
+        List<FolderTreeVo> rootChildren = parentMap.getOrDefault(0L, new ArrayList<>());
+
+        // 构造虚拟根目录节点（id=0，不存数据库，仅前端展示用）
+        FolderTreeVo root = new FolderTreeVo();
+        root.setId(0L);
+        root.setFolderName("根目录");
+        root.setParentId(null);
+        root.setSort(0);
+        root.setChildren(rootChildren);
+
+        return List.of(root);
     }
 
     @Override
     public List<FileDetailVo> getFilesByFolder(Long folderId, Long userId) {
+        // 根目录 id=0 视为顶级目录，folderId 统一转 null
+        Long realFolderId = (folderId != null && folderId == 0L) ? null : folderId;
+
         LambdaQueryWrapper<FileRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(FileRecord::getUserId, userId)
                .eq(FileRecord::getStatus, 1)
-               .eq(folderId == null, FileRecord::getFolderId, null)
-               .eq(folderId != null, FileRecord::getFolderId, folderId)
+               .eq(realFolderId == null, FileRecord::getFolderId, null)
+               .eq(realFolderId != null, FileRecord::getFolderId, realFolderId)
                .orderByDesc(FileRecord::getCreateTime);
 
         List<FileRecord> files = fileRecordMapper.selectList(wrapper);
@@ -99,6 +127,11 @@ public class FileFolderServiceImpl implements FileFolderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteFolder(Long folderId, Long userId) {
+        // 根目录不允许删除
+        if (folderId == null || folderId == 0L) {
+            throw new RuntimeException("根目录不允许删除");
+        }
+
         // 检查文件夹是否存在
         FileFolder folder = fileFolderMapper.selectById(folderId);
         if (folder == null || !folder.getUserId().equals(userId)) {

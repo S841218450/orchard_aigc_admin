@@ -13,9 +13,9 @@ public class FileUploadBase64Dto {
     @Schema(description = "文件名（含扩展名）")
     private String fileName;
 
-    @Schema(description = "用户ID（未登录时必填）")
+    @Schema(description = "用户ID（未登录时必填，仅 folderId 非空时生效）")
     private Long userId;
 
-    @Schema(description = "文件夹ID（可选）")
+    @Schema(description = "文件夹ID：传了（含0根目录）则写入文件系统file_record；不传则只上传COS返回URL")
     private Long folderId;
 }

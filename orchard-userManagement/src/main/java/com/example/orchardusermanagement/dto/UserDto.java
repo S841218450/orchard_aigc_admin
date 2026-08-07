@@ -8,6 +8,9 @@ import lombok.Data;
 @Schema(description = "用户DTO")
 public class UserDto {
 
+    @Schema(description = "主键ID（更新时必填）")
+    private Long id;
+
     @Schema(description = "用户名")
     private String username;
 

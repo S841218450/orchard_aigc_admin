@@ -1,6 +1,7 @@
 package com.example.orchardai.controller;
 
 import com.example.orchardai.dto.ChatSessionDto;
+import com.example.orchardai.dto.ChatSessionIdDto;
 import com.example.orchardai.dto.ChatSessionVo;
 import com.example.orchardai.service.ChatSessionService;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
@@ -25,23 +26,22 @@ public class ChatSessionController {
 
     @Operation(summary = "创建会话")
     @PostMapping("/add")
-    public Result<Void> add(@Valid @RequestBody ChatSessionDto dto) {
+    public Result<ChatSessionVo> add(@Valid @RequestBody ChatSessionDto dto) {
         Long sessionId = SnowflakeUtils.nextId(BizCodeEnum.SESSION);
-        chatSessionService.add(sessionId, dto);
-        return Result.ok();
+        return Result.ok(chatSessionService.add(sessionId, dto));
     }
 
     @Operation(summary = "更新会话")
-    @PostMapping("/update/{id}")
-    public Result<Void> update(@PathVariable Long id, @Valid @RequestBody ChatSessionDto dto) {
-        chatSessionService.update(id, dto);
+    @PostMapping("/update")
+    public Result<Void> update(@Valid @RequestBody ChatSessionDto dto) {
+        chatSessionService.update(dto.getId(), dto);
         return Result.ok();
     }
 
     @Operation(summary = "删除会话")
-    @PostMapping("/delete/{id}")
-    public Result<Void> delete(@PathVariable Long id) {
-        chatSessionService.removeById(id);
+    @PostMapping("/delete")
+    public Result<Void> delete(@Valid @RequestBody ChatSessionIdDto dto) {
+        chatSessionService.removeById(dto.getId());
         return Result.ok();
     }
 

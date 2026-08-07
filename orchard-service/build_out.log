@@ -1,0 +1,442 @@
+﻿[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: javax.annotation.* < plexus.core
+[DEBUG]   Imported: javax.annotation.security.* < plexus.core
+[DEBUG]   Imported: javax.inject.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.classrealm < plexus.core
+[DEBUG]   Imported: org.apache.maven.cli < plexus.core
+[DEBUG]   Imported: org.apache.maven.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.exception < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution.scope < plexus.core
+[DEBUG]   Imported: org.apache.maven.graph < plexus.core
+[DEBUG]   Imported: org.apache.maven.lifecycle < plexus.core
+[DEBUG]   Imported: org.apache.maven.model < plexus.core
+[DEBUG]   Imported: org.apache.maven.monitor < plexus.core
+[DEBUG]   Imported: org.apache.maven.plugin < plexus.core
+[DEBUG]   Imported: org.apache.maven.profiles < plexus.core
+[DEBUG]   Imported: org.apache.maven.project < plexus.core
+[DEBUG]   Imported: org.apache.maven.reporting < plexus.core
+[DEBUG]   Imported: org.apache.maven.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.rtinfo < plexus.core
+[DEBUG]   Imported: org.apache.maven.settings < plexus.core
+[DEBUG]   Imported: org.apache.maven.toolchain < plexus.core
+[DEBUG]   Imported: org.apache.maven.usability < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.events < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.observers < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.resource < plexus.core
+[DEBUG]   Imported: org.codehaus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.* < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.component < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.configuration < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.container < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.context < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.logging < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.personality < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.* < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.artifact < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.collection < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.deployment < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.graph < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.installation < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.internal.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.metadata < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.repository < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.resolution < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.spi < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.transfer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.util < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.version < plexus.core
+[DEBUG]   Imported: org.fusesource.jansi.* < plexus.core
+[DEBUG]   Imported: org.slf4j.* < plexus.core
+[DEBUG]   Imported: org.slf4j.event.* < plexus.core
+[DEBUG]   Imported: org.slf4j.helpers.* < plexus.core
+[DEBUG]   Imported: org.slf4j.spi.* < plexus.core
+[DEBUG] Populating class realm maven.api
+[DEBUG] Created adapter factory; available factories [file-lock, rwlock-local, semaphore-local, noop]; available name mappers [discriminating, file-gav, file-hgav, file-static, gav, static]
+[DEBUG] Message scheme: color
+[DEBUG] Message styles: debug info warning error success failure strong mojo project
+[DEBUG] Reading global settings from E:\work\tool\apache-maven-3.9.11\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\syh\.m2\settings.xml
+[DEBUG] Reading global toolchains from E:\work\tool\apache-maven-3.9.11\conf\toolchains.xml
+[DEBUG] Reading user toolchains from C:\Users\syh\.m2\toolchains.xml
+[DEBUG] Using local repository at E:\work\tool\apache-maven-3.9.11\mvn_repo
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for E:\work\tool\apache-maven-3.9.11\mvn_repo
+[INFO] Scanning for projects...
+[DEBUG] Using mirror alimaven (http://maven.aliyun.com/nexus/content/repositories/central/) for central (https://repo.maven.apache.org/maven2).
+[DEBUG] Extension realms for project com.example:orchard-service:jar:0.0.1-SNAPSHOT: (none)
+[DEBUG] Looking up lifecycle mappings for packaging jar from ClassRealm[plexus.core, parent: null]
+[DEBUG] Creating adapter using nameMapper 'gav' and factory 'rwlock-local'
+[DEBUG] Extension realms for project com.example:orchard2026:pom:0.0.1-SNAPSHOT: (none)
+[DEBUG] Looking up lifecycle mappings for packaging pom from ClassRealm[plexus.core, parent: null]
+[DEBUG] Resolving plugin prefix spring-boot from [org.apache.maven.plugins, org.codehaus.mojo]
+[DEBUG] Resolved plugin prefix spring-boot to org.springframework.boot:spring-boot-maven-plugin from POM com.example:orchard-service:jar:0.0.1-SNAPSHOT
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: com.example:orchard-service:jar:0.0.1-SNAPSHOT
+[DEBUG] Tasks:   [spring-boot:run]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] --------------------< com.example:orchard-service >---------------------
+[INFO] Building orchard-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[DEBUG] Resolving plugin prefix spring-boot from [org.apache.maven.plugins, org.codehaus.mojo]
+[DEBUG] Resolved plugin prefix spring-boot to org.springframework.boot:spring-boot-maven-plugin from POM com.example:orchard-service:jar:0.0.1-SNAPSHOT
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       com.example:orchard-service:0.0.1-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [test]
+[DEBUG] Repositories (dependencies): [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Repositories (plugins)     : [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] --- init fork of com.example:orchard-service:0.0.1-SNAPSHOT for org.springframework.boot:spring-boot-maven-plugin:3.5.15:run (default-cli) ---
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [compile, test]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:3.3.1:resources (default-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <addDefaultExcludes default-value="true"/>
+  <buildFilters default-value="${project.build.filters}"/>
+  <encoding default-value="${project.build.sourceEncoding}"/>
+  <escapeWindowsPaths default-value="true"/>
+  <fileNameFiltering default-value="false"/>
+  <includeEmptyDirs default-value="false"/>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <overwrite default-value="false"/>
+  <project default-value="${project}"/>
+  <resources default-value="${project.resources}"/>
+  <session default-value="${session}"/>
+  <skip default-value="false">${maven.resources.skip}</skip>
+  <supportMultiLineFiltering default-value="false"/>
+  <useBuildFilters default-value="true"/>
+  <useDefaultDelimiters default-value="true"/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.14.0:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <annotationProcessorPathsUseDepMgmt default-value="false"/>
+  <basedir default-value="${basedir}"/>
+  <buildDirectory default-value="${project.build.directory}"/>
+  <compilePath default-value="${project.compileClasspathElements}"/>
+  <compileSourceRoots default-value="${project.compileSourceRoots}"/>
+  <compilerArgs>
+    <arg>-parameters</arg>
+  </compilerArgs>
+  <compilerId default-value="javac">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value="${reuseCreated}">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <createMissingPackageInfoClass default-value="true">${maven.compiler.createMissingPackageInfoClass}</createMissingPackageInfoClass>
+  <debug default-value="true">${maven.compiler.debug}</debug>
+  <debugFileName default-value="javac"/>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <enablePreview default-value="false">${maven.compiler.enablePreview}</enablePreview>
+  <encoding default-value="${project.build.sourceEncoding}">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value="true">${maven.compiler.failOnError}</failOnError>
+  <failOnWarning default-value="false">${maven.compiler.failOnWarning}</failOnWarning>
+  <fileExtensions default-value="class,jar"/>
+  <forceJavacCompilerUse default-value="false">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <forceLegacyJavacApi default-value="false">${maven.compiler.forceLegacyJavacApi}</forceLegacyJavacApi>
+  <fork default-value="false">${maven.compiler.fork}</fork>
+  <generatedSourcesDirectory default-value="${project.build.directory}/generated-sources/annotations"/>
+  <implicit>${maven.compiler.implicit}</implicit>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <moduleVersion default-value="${project.version}">${maven.compiler.moduleVersion}</moduleVersion>
+  <mojoExecution default-value="${mojoExecution}"/>
+  <optimize default-value="false">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value="${project.build.outputDirectory}">${maven.compiler.outputDirectory}</outputDirectory>
+  <outputTimestamp default-value="${project.build.outputTimestamp}"/>
+  <parameters default-value="false">${maven.compiler.parameters}</parameters>
+  <proc>${maven.compiler.proc}</proc>
+  <project default-value="${project}"/>
+  <projectArtifact default-value="${project.artifact}"/>
+  <release>${maven.compiler.release}</release>
+  <session default-value="${session}"/>
+  <showCompilationChanges default-value="false">${maven.compiler.showCompilationChanges}</showCompilationChanges>
+  <showDeprecation default-value="false">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value="true">${maven.compiler.showWarnings}</showWarnings>
+  <skipMain>${maven.main.skip}</skipMain>
+  <skipMultiThreadWarning default-value="false">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value="1.8">${maven.compiler.source}</source>
+  <staleMillis default-value="0">${lastModGranularityMs}</staleMillis>
+  <target default-value="1.8">${maven.compiler.target}</target>
+  <useIncrementalCompilation default-value="true">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <verbose default-value="false">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:3.3.1:testResources (default-testResources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <addDefaultExcludes default-value="true"/>
+  <buildFilters default-value="${project.build.filters}"/>
+  <encoding default-value="${project.build.sourceEncoding}"/>
+  <escapeWindowsPaths default-value="true"/>
+  <fileNameFiltering default-value="false"/>
+  <includeEmptyDirs default-value="false"/>
+  <outputDirectory default-value="${project.build.testOutputDirectory}"/>
+  <overwrite default-value="false"/>
+  <project default-value="${project}"/>
+  <resources default-value="${project.testResources}"/>
+  <session default-value="${session}"/>
+  <skip default-value="false">${maven.test.skip}</skip>
+  <supportMultiLineFiltering default-value="false"/>
+  <useBuildFilters default-value="true"/>
+  <useDefaultDelimiters default-value="true"/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.14.0:testCompile (default-testCompile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <annotationProcessorPathsUseDepMgmt default-value="false"/>
+  <basedir default-value="${basedir}"/>
+  <buildDirectory default-value="${project.build.directory}"/>
+  <compileSourceRoots default-value="${project.testCompileSourceRoots}"/>
+  <compilerArgs>
+    <arg>-parameters</arg>
+  </compilerArgs>
+  <compilerId default-value="javac">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value="${reuseCreated}">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <createMissingPackageInfoClass default-value="true">${maven.compiler.createMissingPackageInfoClass}</createMissingPackageInfoClass>
+  <debug default-value="true">${maven.compiler.debug}</debug>
+  <debugFileName default-value="javac-test"/>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <enablePreview default-value="false">${maven.compiler.enablePreview}</enablePreview>
+  <encoding default-value="${project.build.sourceEncoding}">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value="true">${maven.compiler.failOnError}</failOnError>
+  <failOnWarning default-value="false">${maven.compiler.failOnWarning}</failOnWarning>
+  <fileExtensions default-value="class,jar"/>
+  <forceJavacCompilerUse default-value="false">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <forceLegacyJavacApi default-value="false">${maven.compiler.forceLegacyJavacApi}</forceLegacyJavacApi>
+  <fork default-value="false">${maven.compiler.fork}</fork>
+  <generatedTestSourcesDirectory default-value="${project.build.directory}/generated-test-sources/test-annotations"/>
+  <implicit>${maven.compiler.implicit}</implicit>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <mojoExecution default-value="${mojoExecution}"/>
+  <optimize default-value="false">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value="${project.build.testOutputDirectory}"/>
+  <outputTimestamp default-value="${project.build.outputTimestamp}"/>
+  <parameters default-value="false">${maven.compiler.parameters}</parameters>
+  <proc>${maven.compiler.proc}</proc>
+  <project default-value="${project}"/>
+  <release>${maven.compiler.release}</release>
+  <session default-value="${session}"/>
+  <showCompilationChanges default-value="false">${maven.compiler.showCompilationChanges}</showCompilationChanges>
+  <showDeprecation default-value="false">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value="true">${maven.compiler.showWarnings}</showWarnings>
+  <skip>${maven.test.skip}</skip>
+  <skipMultiThreadWarning default-value="false">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value="1.8">${maven.compiler.source}</source>
+  <staleMillis default-value="0">${lastModGranularityMs}</staleMillis>
+  <target default-value="1.8">${maven.compiler.target}</target>
+  <testPath default-value="${project.testClasspathElements}"/>
+  <testRelease>${maven.compiler.testRelease}</testRelease>
+  <testSource>${maven.compiler.testSource}</testSource>
+  <testTarget>${maven.compiler.testTarget}</testTarget>
+  <useIncrementalCompilation default-value="true">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <useModulePath default-value="true"/>
+  <verbose default-value="false">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] --- exit fork of com.example:orchard-service:0.0.1-SNAPSHOT for org.springframework.boot:spring-boot-maven-plugin:3.5.15:run (default-cli) ---
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.springframework.boot:spring-boot-maven-plugin:3.5.15:run (default-cli)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <addResources default-value="false">${spring-boot.run.addResources}</addResources>
+  <additionalClasspathElements>${spring-boot.run.additional-classpath-elements}</additionalClasspathElements>
+  <agents>${spring-boot.run.agents}</agents>
+  <classesDirectory default-value="${project.build.outputDirectory}"/>
+  <commandlineArguments>${spring-boot.run.arguments}</commandlineArguments>
+  <excludeGroupIds default-value="">${spring-boot.excludeGroupIds}</excludeGroupIds>
+  <excludes>
+    <exclude>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </exclude>${spring-boot.excludes}</excludes>
+  <includes>${spring-boot.includes}</includes>
+  <jvmArguments>${spring-boot.run.jvmArguments}</jvmArguments>
+  <mainClass>${spring-boot.run.main-class}</mainClass>
+  <noverify>${spring-boot.run.noverify}</noverify>
+  <optimizedLaunch default-value="true">${spring-boot.run.optimizedLaunch}</optimizedLaunch>
+  <profiles>${spring-boot.run.profiles}</profiles>
+  <project default-value="${project}"/>
+  <session default-value="${session}"/>
+  <skip default-value="false">${spring-boot.run.skip}</skip>
+  <useTestClasspath default-value="false">${spring-boot.run.useTestClasspath}</useTestClasspath>
+  <workingDirectory>${spring-boot.run.workingDirectory}</workingDirectory>
+</configuration>
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] >>> spring-boot:3.5.15:run (default-cli) > test-compile @ orchard-service >>>
+[DEBUG] Could not find metadata com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Could not find metadata com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-auth:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Resolving artifact com.example:orchard-auth:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-auth:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[WARNING] The POM for com.example:orchard-auth:jar:0.0.1-SNAPSHOT is missing, no dependency information available
+[DEBUG] Could not find metadata com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Could not find metadata com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-userManagement:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Resolving artifact com.example:orchard-userManagement:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-userManagement:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[WARNING] The POM for com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT is missing, no dependency information available
+[DEBUG] Could not find metadata com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Could not find metadata com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-ai:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Resolving artifact com.example:orchard-ai:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-ai:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[WARNING] The POM for com.example:orchard-ai:jar:0.0.1-SNAPSHOT is missing, no dependency information available
+[DEBUG] Could not find metadata com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Could not find metadata com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml in local (E:\work\tool\apache-maven-3.9.11\mvn_repo)
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[DEBUG] com.example:orchard-file:0.0.1-SNAPSHOT/maven-metadata.xml was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not be reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[DEBUG] Resolving artifact com.example:orchard-file:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-file:pom:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[WARNING] The POM for com.example:orchard-file:jar:0.0.1-SNAPSHOT is missing, no dependency information available
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=614600, ConflictMarker.markTime=242800, ConflictMarker.nodeCount=115, ConflictIdSorter.graphTime=513600, ConflictIdSorter.topsortTime=258200, ConflictIdSorter.conflictIdCount=58, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=5148900, ConflictResolver.conflictItemCount=86, DfDependencyCollector.collectTime=301266000, DfDependencyCollector.transformTime=7921100}
+[DEBUG] com.example:orchard-service:jar:0.0.1-SNAPSHOT
+[DEBUG]    com.example:orchard-auth:jar:0.0.1-SNAPSHOT:compile
+[DEBUG]    com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT:compile
+[DEBUG]    com.example:orchard-ai:jar:0.0.1-SNAPSHOT:compile
+[DEBUG]    com.example:orchard-file:jar:0.0.1-SNAPSHOT:compile
+[DEBUG]    org.springframework.boot:spring-boot-starter:jar:3.5.15:compile
+[DEBUG]       org.springframework.boot:spring-boot:jar:3.5.15:compile (version managed from 3.5.15)
+[DEBUG]          org.springframework:spring-context:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]             org.springframework:spring-aop:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]             org.springframework:spring-beans:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]             org.springframework:spring-expression:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]             io.micrometer:micrometer-observation:jar:1.15.12:compile (version managed from 1.15.12)
+[DEBUG]                io.micrometer:micrometer-commons:jar:1.15.12:compile (version managed from 1.15.12)
+[DEBUG]       org.springframework.boot:spring-boot-autoconfigure:jar:3.5.15:compile (version managed from 3.5.15)
+[DEBUG]       jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile (version managed from 2.1.1)
+[DEBUG]       org.springframework:spring-core:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]          org.springframework:spring-jcl:jar:6.2.19:compile (version managed from 6.2.19)
+[DEBUG]       org.yaml:snakeyaml:jar:2.4:compile (version managed from 2.4)
+[DEBUG]    org.springframework.boot:spring-boot-starter-test:jar:3.5.15:test
+[DEBUG]       org.springframework.boot:spring-boot-test:jar:3.5.15:test (version managed from 3.5.15)
+[DEBUG]       org.springframework.boot:spring-boot-test-autoconfigure:jar:3.5.15:test (version managed from 3.5.15)
+[DEBUG]       com.jayway.jsonpath:json-path:jar:2.9.0:test (version managed from 2.9.0)
+[DEBUG]          org.slf4j:slf4j-api:jar:2.0.18:compile (version managed from 2.0.11)
+[DEBUG]       jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test (version managed from 4.0.5)
+[DEBUG]          jakarta.activation:jakarta.activation-api:jar:2.1.4:test (version managed from 2.1.4)
+[DEBUG]       net.minidev:json-smart:jar:2.5.2:test (version managed from 2.5.2)
+[DEBUG]          net.minidev:accessors-smart:jar:2.5.2:test
+[DEBUG]             org.ow2.asm:asm:jar:9.7.1:test
+[DEBUG]       org.assertj:assertj-core:jar:3.27.7:test (version managed from 3.27.7)
+[DEBUG]          net.bytebuddy:byte-buddy:jar:1.17.8:test (version managed from 1.18.3)
+[DEBUG]       org.awaitility:awaitility:jar:4.2.2:test (version managed from 4.2.2)
+[DEBUG]       org.hamcrest:hamcrest:jar:3.0:test (version managed from 3.0)
+[DEBUG]       org.junit.jupiter:junit-jupiter:jar:5.12.2:test (version managed from 5.12.2)
+[DEBUG]          org.junit.jupiter:junit-jupiter-api:jar:5.12.2:test (version managed from 5.12.2)
+[DEBUG]             org.opentest4j:opentest4j:jar:1.3.0:test
+[DEBUG]             org.junit.platform:junit-platform-commons:jar:1.12.2:test (version managed from 1.12.2)
+[DEBUG]             org.apiguardian:apiguardian-api:jar:1.1.2:test
+[DEBUG]          org.junit.jupiter:junit-jupiter-params:jar:5.12.2:test (version managed from 5.12.2)
+[DEBUG]          org.junit.jupiter:junit-jupiter-engine:jar:5.12.2:test (version managed from 5.12.2)
+[DEBUG]             org.junit.platform:junit-platform-engine:jar:1.12.2:test (version managed from 1.12.2)
+[DEBUG]       org.mockito:mockito-core:jar:5.17.0:test (version managed from 5.17.0)
+[DEBUG]          net.bytebuddy:byte-buddy-agent:jar:1.17.8:test (version managed from 1.15.11)
+[DEBUG]          org.objenesis:objenesis:jar:3.3:test
+[DEBUG]       org.mockito:mockito-junit-jupiter:jar:5.17.0:test (version managed from 5.17.0)
+[DEBUG]       org.skyscreamer:jsonassert:jar:1.5.3:test (version managed from 1.5.3)
+[DEBUG]          com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[DEBUG]       org.springframework:spring-test:jar:6.2.19:test (version managed from 6.2.19)
+[DEBUG]       org.xmlunit:xmlunit-core:jar:2.10.4:test (version managed from 2.10.4)
+[DEBUG]    org.springframework.boot:spring-boot-starter-log4j2:jar:3.5.15:compile
+[DEBUG]       org.apache.logging.log4j:log4j-slf4j2-impl:jar:2.24.3:compile (version managed from 2.24.3)
+[DEBUG]          org.apache.logging.log4j:log4j-api:jar:2.24.3:compile (version managed from 2.24.3)
+[DEBUG]       org.apache.logging.log4j:log4j-core:jar:2.24.3:compile (version managed from 2.24.3)
+[DEBUG]       org.apache.logging.log4j:log4j-jul:jar:2.24.3:compile (version managed from 2.24.3)
+[DEBUG]    org.projectlombok:lombok:jar:1.18.42:provided
+[DEBUG] Resolving artifact com.example:orchard-auth:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-ai:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-file:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-auth:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-ai:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[DEBUG] Resolving artifact com.example:orchard-file:jar:0.0.1-SNAPSHOT from [huaweicloud (https://mirrors.huaweicloud.com/repository/maven/, default, releases+snapshots), aliyunmaven (https://maven.aliyun.com/repository/public, default, releases+snapshots), spring-milestones (https://repo.spring.io/milestone, default, releases), spring-snapshots (https://repo.spring.io/snapshot, default, snapshots), alimaven (http://maven.aliyun.com/nexus/content/repositories/central/, default, releases)]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.856 s
+[INFO] Finished at: 2026-07-31T16:27:27+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal on project orchard-service: Could not resolve dependencies for project com.example:orchard-service:jar:0.0.1-SNAPSHOT
+[ERROR] dependency: com.example:orchard-auth:jar:0.0.1-SNAPSHOT (compile)
+[ERROR] 	com.example:orchard-auth:jar:0.0.1-SNAPSHOT was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[ERROR] 	com.example:orchard-auth:jar:0.0.1-SNAPSHOT was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[ERROR] 	com.example:orchard-auth:jar:0.0.1-SNAPSHOT was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[ERROR] dependency: com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT (compile)
+[ERROR] 	com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[ERROR] 	com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[ERROR] 	com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[ERROR] dependency: com.example:orchard-ai:jar:0.0.1-SNAPSHOT (compile)
+[ERROR] 	com.example:orchard-ai:jar:0.0.1-SNAPSHOT was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[ERROR] 	com.example:orchard-ai:jar:0.0.1-SNAPSHOT was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[ERROR] 	com.example:orchard-ai:jar:0.0.1-SNAPSHOT was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[ERROR] dependency: com.example:orchard-file:jar:0.0.1-SNAPSHOT (compile)
+[ERROR] 	com.example:orchard-file:jar:0.0.1-SNAPSHOT was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[ERROR] 	com.example:orchard-file:jar:0.0.1-SNAPSHOT was not found in https://maven.aliyun.com/repository/public during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of aliyunmaven has elapsed or updates are forced
+[ERROR] 	com.example:orchard-file:jar:0.0.1-SNAPSHOT was not found in https://repo.spring.io/snapshot during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of spring-snapshots has elapsed or updates are forced
+[ERROR] : The following artifacts could not be resolved: com.example:orchard-auth:jar:0.0.1-SNAPSHOT (absent), com.example:orchard-userManagement:jar:0.0.1-SNAPSHOT (absent), com.example:orchard-ai:jar:0.0.1-SNAPSHOT (absent), com.example:orchard-file:jar:0.0.1-SNAPSHOT (absent): com.example:orchard-auth:jar:0.0.1-SNAPSHOT was not found in https://mirrors.huaweicloud.com/repository/maven/ during a previous attempt. This failure was cached in the local repository and resolution is not reattempted until the update interval of huaweicloud has elapsed or updates are forced
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException
+[DEBUG] Shutting down adapter factory; available factories [file-lock, rwlock-local, semaphore-local, noop]; available name mappers [discriminating, file-gav, file-hgav, file-static, gav, static]
+[DEBUG] Shutting down 'file-lock' factory
+[DEBUG] Shutting down 'rwlock-local' factory
+[DEBUG] Shutting down 'semaphore-local' factory
+[DEBUG] Shutting down 'noop' factory

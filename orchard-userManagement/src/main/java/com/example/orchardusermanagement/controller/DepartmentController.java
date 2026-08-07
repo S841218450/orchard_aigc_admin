@@ -28,9 +28,9 @@ public class DepartmentController {
     }
 
     @Operation(summary = "更新部门")
-    @PutMapping("/update/{id}")
-    public Result<Void> update(@RequestParam Long id, @Valid @RequestBody DepartmentDto dto) {
-        departmentService.update(id, dto);
+    @PutMapping("/update")
+    public Result<Void> update(@Valid @RequestBody DepartmentDto dto) {
+        departmentService.update(dto.getId(), dto);
         return Result.ok();
     }
 

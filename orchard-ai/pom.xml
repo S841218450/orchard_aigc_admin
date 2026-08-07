@@ -29,6 +29,12 @@
             <artifactId>orchard-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!-- Orchard File -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>orchard-file</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>

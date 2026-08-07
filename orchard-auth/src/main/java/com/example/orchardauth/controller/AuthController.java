@@ -9,6 +9,7 @@ import com.example.orchardauth.vo.OAuthBinddingVo;
 import com.example.orchardauth.vo.UserInfoVo;
 import com.example.orchardcommon.annotation.LogOperation;
 import com.example.orchardcommon.annotation.PublicApi;
+import com.example.orchardauth.util.RsaUtil;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,8 +38,8 @@ public class AuthController {
     @PublicApi
     @LogOperation(module = "认证", type = "发送验证码", description = "发送手机验证码")
     @PostMapping("/sms/send")
-    public Result<Void> sendSmsCode(@RequestParam String phone) {
-        smsCodeService.sendCode(phone);
+    public Result<Void> sendSmsCode(@Valid @RequestBody smsRequest request) {
+        smsCodeService.sendCode(request.getPhone());
         return Result.ok();
     }
 
@@ -94,6 +95,13 @@ public class AuthController {
         Long userId = (Long) request.getAttribute("userId");
         UserInfoVo vo = authService.getUserInfo(userId);
         return Result.ok(vo);
+    }
+
+    @Operation(summary = "获取RSA公钥（用于前端加密密码）")
+    @PublicApi
+    @GetMapping("/public-key")
+    public Result<String> getPublicKey() {
+        return Result.ok(RsaUtil.getPublicKeyBase64());
     }
 
     @Operation(summary = "获取第三方登录授权URL")

@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 @Schema(description = "套餐DTO")
 public class PlanDto {
 
+    @Schema(description = "主键ID（更新时必填）")
+    private Long id;
+
     @NotBlank(message = "套餐名称不能为空")
     @Schema(description = "套餐名称")
     private String name;

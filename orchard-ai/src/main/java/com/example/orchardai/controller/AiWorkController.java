@@ -1,6 +1,7 @@
 package com.example.orchardai.controller;
 
 import com.example.orchardai.dto.AiWorkCreateDto;
+import com.example.orchardai.dto.AiWorkIdDto;
 import com.example.orchardai.dto.AiWorkQuery;
 import com.example.orchardai.dto.AiWorkUpdateDto;
 import com.example.orchardai.dto.AiWorkVo;
@@ -43,48 +44,48 @@ public class AiWorkController {
 
     @Operation(summary = "更新作品（图片/提示词等）")
     @PublicApi
-    @PutMapping("/update/{id}")
-    public Result<Void> update(@PathVariable Long id, @RequestBody AiWorkUpdateDto dto) {
-        aiWorkService.update(id, dto);
+    @PutMapping("/update")
+    public Result<Void> update(@RequestBody AiWorkUpdateDto dto) {
+        aiWorkService.update(dto.getId(), dto);
         return Result.ok();
     }
     //作品状态相关（Agent端调用，无需登录鉴权）
     @PublicApi
     @Operation(summary = "更新作品状态为生成中")
-    @PutMapping("/generating/{id}")
-    public Result<Void> generating(@PathVariable Long id) {
-        aiWorkService.updateStatus(id, WorkStatusEnum.GENERATING);
+    @PutMapping("/generating")
+    public Result<Void> generating(@Valid @RequestBody AiWorkIdDto dto) {
+        aiWorkService.updateStatus(dto.getId(), WorkStatusEnum.GENERATING);
         return Result.ok();
     }
 
     @PublicApi
     @Operation(summary = "更新作品状态为已完成")
-    @PutMapping("/completed/{id}")
-    public Result<Void> completed(@PathVariable Long id) {
-        aiWorkService.updateStatus(id, WorkStatusEnum.COMPLETED);
+    @PutMapping("/completed")
+    public Result<Void> completed(@Valid @RequestBody AiWorkIdDto dto) {
+        aiWorkService.updateStatus(dto.getId(), WorkStatusEnum.COMPLETED);
         return Result.ok();
     }
 
     @PublicApi
     @Operation(summary = "更新作品状态为失败")
-    @PutMapping("/failed/{id}")
-    public Result<Void> failed(@PathVariable Long id) {
-        aiWorkService.updateStatus(id, WorkStatusEnum.FAILED);
+    @PutMapping("/failed")
+    public Result<Void> failed(@Valid @RequestBody AiWorkIdDto dto) {
+        aiWorkService.updateStatus(dto.getId(), WorkStatusEnum.FAILED);
         return Result.ok();
     }
 
     @PublicApi
     @Operation(summary = "更新作品状态为待操作")
-    @PutMapping("/pending/{id}")
-    public Result<Void> pending(@PathVariable Long id, @RequestBody Object operationData) {
-        aiWorkService.updateStatusWithOperationData(id, WorkStatusEnum.PENDING_OPERATION, operationData);
+    @PutMapping("/pending")
+    public Result<Void> pending(@RequestBody AiWorkUpdateDto dto) {
+        aiWorkService.updateStatusWithOperationData(dto.getId(), WorkStatusEnum.PENDING_OPERATION, dto.getDataList());
         return Result.ok();
     }
 
     @Operation(summary = "删除作品")
-    @PostMapping("/delete/{id}")
-    public Result<Void> delete(@PathVariable Long id) {
-        aiWorkService.delete(id);
+    @PostMapping("/delete")
+    public Result<Void> delete(@Valid @RequestBody AiWorkIdDto dto) {
+        aiWorkService.delete(dto.getId());
         return Result.ok();
     }
 }

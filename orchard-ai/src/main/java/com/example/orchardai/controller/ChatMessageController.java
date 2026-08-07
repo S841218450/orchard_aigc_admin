@@ -1,12 +1,10 @@
 package com.example.orchardai.controller;
 
-import com.example.orchardai.dto.ChatMessageDto;
 import com.example.orchardai.dto.ChatMessageVo;
 import com.example.orchardai.service.ChatMessageService;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
