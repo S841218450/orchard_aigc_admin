@@ -7,6 +7,7 @@ public enum BizCodeEnum {
     SESSION(2581, "会话ID", "SESS"),
     MESSAGE(2593, "消息", "MSG"),
     WORK(2605, "作品", "WORK"),
+    WORK_IMAGE(2693, "作品", "WORK_IMAGE"),
     KB_DOC(2617, "知识库文档", "KBDOC"),
     ASSET(2629, "素材", "AST"),
 

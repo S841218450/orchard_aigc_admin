@@ -7,6 +7,7 @@ import com.example.orchardai.dto.ChatSessionVo;
 import com.example.orchardai.entity.ChatSession;
 import com.example.orchardai.mapper.ChatSessionMapper;
 import com.example.orchardai.service.ChatSessionService;
+import com.example.orchardcommon.exception.BizException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -38,7 +39,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
     public void update(Long id, ChatSessionDto dto) {
         ChatSession session = getById(id);
         if (session == null) {
-            throw new RuntimeException("会话不存在");
+            throw new BizException("会话不存在");
         }
         session.setTitle(dto.getTitle());
         session.setUpdateTime(LocalDateTime.now());

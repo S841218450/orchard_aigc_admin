@@ -33,6 +33,13 @@ public class GlobalExceptionHandler {
         return Result.error("系统繁忙，请稍后重试");
     }
 
+    @ExceptionHandler(BizException.class)
+    public Result<?> handleBizException(BizException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.warn("[业务异常] {} {} | 错误码: {} | 提示: {}", request.getMethod(), requestURI, e.getCode(), e.getMessage());
+        return Result.error(e.getCode(), e.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public Result<?> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();

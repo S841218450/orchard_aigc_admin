@@ -3,6 +3,7 @@ package com.example.orchardfile.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import com.example.orchardfile.entity.FileFolder;
 import com.example.orchardfile.entity.FileRecord;
 import com.example.orchardfile.mapper.FileFolderMapper;
@@ -45,7 +46,7 @@ public class FileFolderServiceImpl implements FileFolderService {
                .eq(realParentId != null, FileFolder::getParentId, realParentId);
 
         if (fileFolderMapper.selectCount(wrapper) > 0) {
-            throw new RuntimeException("该目录下已存在同名文件夹");
+            throw new BizException("该目录下已存在同名文件夹");
         }
 
         // 创建文件夹
@@ -129,13 +130,13 @@ public class FileFolderServiceImpl implements FileFolderService {
     public void deleteFolder(Long folderId, Long userId) {
         // 根目录不允许删除
         if (folderId == null || folderId == 0L) {
-            throw new RuntimeException("根目录不允许删除");
+            throw new BizException("根目录不允许删除");
         }
 
         // 检查文件夹是否存在
         FileFolder folder = fileFolderMapper.selectById(folderId);
         if (folder == null || !folder.getUserId().equals(userId)) {
-            throw new RuntimeException("文件夹不存在或无权访问");
+            throw new BizException("文件夹不存在或无权访问");
         }
 
         // 检查文件夹下是否有文件或子文件夹
@@ -144,7 +145,7 @@ public class FileFolderServiceImpl implements FileFolderService {
                    .eq(FileRecord::getStatus, 1);
 
         if (fileRecordMapper.selectCount(fileWrapper) > 0) {
-            throw new RuntimeException("该文件夹下还有文件，请先删除文件");
+            throw new BizException("该文件夹下还有文件，请先删除文件");
         }
 
         LambdaQueryWrapper<FileFolder> subFolderWrapper = new LambdaQueryWrapper<>();
@@ -152,7 +153,7 @@ public class FileFolderServiceImpl implements FileFolderService {
                         .eq(FileFolder::getStatus, 1);
 
         if (fileFolderMapper.selectCount(subFolderWrapper) > 0) {
-            throw new RuntimeException("该文件夹下还有子文件夹，请先删除子文件夹");
+            throw new BizException("该文件夹下还有子文件夹，请先删除子文件夹");
         }
 
         // 删除文件夹
@@ -169,7 +170,7 @@ public class FileFolderServiceImpl implements FileFolderService {
         // 检查文件是否存在
         FileRecord file = fileRecordMapper.selectById(fileId);
         if (file == null || !file.getUserId().equals(userId)) {
-            throw new RuntimeException("文件不存在或无权访问");
+            throw new BizException("文件不存在或无权访问");
         }
 
         // 删除文件记录

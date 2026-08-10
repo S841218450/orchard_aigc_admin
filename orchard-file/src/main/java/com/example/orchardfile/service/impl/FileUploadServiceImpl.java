@@ -2,6 +2,7 @@ package com.example.orchardfile.service.impl;
 
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import com.example.orchardfile.config.CosConfig;
 import com.example.orchardfile.dto.FileUnifiedUploadDto;
 import com.example.orchardfile.dto.FileUploadBase64Dto;
@@ -69,7 +70,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         } catch (Exception e) {
             log.error("文件上传失败：folderId={}, userId={}, error={}", folderId, userId, e.getMessage(), e);
-            throw new RuntimeException("文件上传失败：" + e.getMessage());
+            throw new BizException("文件上传失败：" + e.getMessage());
         }
     }
 
@@ -171,7 +172,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         } catch (Exception e) {
             log.error("大文件分块上传失败：folderId={}, userId={}, error={}", folderId, userId, e.getMessage(), e);
-            throw new RuntimeException("大文件上传失败：" + e.getMessage());
+            throw new BizException("大文件上传失败：" + e.getMessage());
         }
     }
 
@@ -193,7 +194,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         } catch (Exception e) {
             log.error("Base64上传失败：folderId={}, userId={}, error={}", folderId, userId, e.getMessage(), e);
-            throw new RuntimeException("Base64文件上传失败：" + e.getMessage());
+            throw new BizException("Base64文件上传失败：" + e.getMessage());
         }
     }
 
@@ -228,7 +229,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         } catch (Exception e) {
             log.error("URL上传失败：folderId={}, userId={}, url={}, error={}", folderId, userId, url, e.getMessage(), e);
-            throw new RuntimeException("URL文件上传失败：" + e.getMessage());
+            throw new BizException("URL文件上传失败：" + e.getMessage());
         }
     }
 
@@ -263,7 +264,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         } else if (dto.getUrl() != null && !dto.getUrl().isEmpty()) {
             results = List.of(uploadFileByUrl(dto.getUrl(), dto.getFileName(), finalUserId, folderId));
         } else {
-            throw new RuntimeException("上传内容不能为空（base64/base64List/url/urlList 至少传一项），二进制文件请用 /file/upload 或 /file/uploadBatch 接口");
+            throw new BizException("上传内容不能为空（base64/base64List/url/urlList 至少传一项），二进制文件请用 /file/upload 或 /file/uploadBatch 接口");
         }
 
         return results;
@@ -297,7 +298,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             result.setCosPath(cosPath);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("COS上传失败：" + e.getMessage(), e);
+            throw new BizException("COS上传失败：" + e.getMessage());
         }
     }
 
@@ -329,7 +330,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             result.setCosPath(cosPath);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("Base64上传COS失败：" + e.getMessage(), e);
+            throw new BizException("Base64上传COS失败：" + e.getMessage());
         }
     }
 
@@ -343,7 +344,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             connection.connect();
 
             if (connection.getResponseCode() != 200) {
-                throw new RuntimeException("下载文件失败，HTTP状态码：" + connection.getResponseCode());
+                throw new BizException("下载文件失败，HTTP状态码：" + connection.getResponseCode());
             }
 
             byte[] fileBytes;
@@ -385,7 +386,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             result.setCosPath(cosPath);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("URL上传COS失败：" + e.getMessage(), e);
+            throw new BizException("URL上传COS失败：" + e.getMessage());
         }
     }
 
@@ -444,10 +445,10 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     private void validateFileSize(long fileSize) {
         if (fileSize < cosConfig.getMinFileSize()) {
-            throw new RuntimeException("文件大小不能小于 " + formatFileSize(cosConfig.getMinFileSize()));
+            throw new BizException("文件大小不能小于 " + formatFileSize(cosConfig.getMinFileSize()));
         }
         if (fileSize > cosConfig.getMaxFileSize()) {
-            throw new RuntimeException("文件大小不能超过 " + formatFileSize(cosConfig.getMaxFileSize()));
+            throw new BizException("文件大小不能超过 " + formatFileSize(cosConfig.getMaxFileSize()));
         }
     }
 

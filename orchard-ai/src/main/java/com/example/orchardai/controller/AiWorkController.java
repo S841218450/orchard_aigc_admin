@@ -8,6 +8,7 @@ import com.example.orchardai.dto.AiWorkVo;
 import com.example.orchardai.enums.WorkStatusEnum;
 import com.example.orchardai.service.AiWorkService;
 import com.example.orchardcommon.annotation.PublicApi;
+import com.example.orchardcommon.dto.IdDto;
 import com.example.orchardcommon.result.PageResult;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,23 +38,22 @@ public class AiWorkController {
     }
 
     @Operation(summary = "获取当前用户作品列表（分页）")
-    @GetMapping("/list")
-    public Result<PageResult<AiWorkVo>> list(@ModelAttribute AiWorkQuery query) {
+    @PostMapping("/page")
+    public Result<PageResult<AiWorkVo>> page(@RequestBody AiWorkQuery query) {
         return Result.ok(aiWorkService.listByUser(query));
     }
 
     @Operation(summary = "更新作品（图片/提示词等）")
     @PublicApi
     @PutMapping("/update")
-    public Result<Void> update(@RequestBody AiWorkUpdateDto dto) {
-        aiWorkService.update(dto.getId(), dto);
-        return Result.ok();
+    public Result<AiWorkVo> update(@RequestBody AiWorkUpdateDto dto) {
+        return Result.ok(aiWorkService.update(dto.getId(), dto));
     }
     //作品状态相关（Agent端调用，无需登录鉴权）
     @PublicApi
     @Operation(summary = "更新作品状态为生成中")
     @PutMapping("/generating")
-    public Result<Void> generating(@Valid @RequestBody AiWorkIdDto dto) {
+    public Result<Void> generating(@Valid @RequestBody IdDto dto) {
         aiWorkService.updateStatus(dto.getId(), WorkStatusEnum.GENERATING);
         return Result.ok();
     }
@@ -61,7 +61,7 @@ public class AiWorkController {
     @PublicApi
     @Operation(summary = "更新作品状态为已完成")
     @PutMapping("/completed")
-    public Result<Void> completed(@Valid @RequestBody AiWorkIdDto dto) {
+    public Result<Void> completed(@Valid @RequestBody IdDto dto) {
         aiWorkService.updateStatus(dto.getId(), WorkStatusEnum.COMPLETED);
         return Result.ok();
     }

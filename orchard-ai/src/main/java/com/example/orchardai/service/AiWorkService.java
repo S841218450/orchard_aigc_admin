@@ -17,7 +17,7 @@ public interface AiWorkService extends IService<AiWork> {
 
     PageResult<AiWorkVo> listByUser(AiWorkQuery query);
 
-    void update(Long id, AiWorkUpdateDto dto);
+    AiWorkVo update(Long id, AiWorkUpdateDto dto);
 
     void updateStatus(Long id, WorkStatusEnum status);
 

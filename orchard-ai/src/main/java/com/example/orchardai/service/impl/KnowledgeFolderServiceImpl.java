@@ -10,6 +10,7 @@ import com.example.orchardai.service.KnowledgeFolderService;
 import com.example.orchardai.vo.KnowledgeFolderTreeVo;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class KnowledgeFolderServiceImpl implements KnowledgeFolderService {
                .eq(KnowledgeFolder::getStatus, 1);
 
         if (folderMapper.selectCount(wrapper) > 0) {
-            throw new RuntimeException("该目录下已存在同名文件夹");
+            throw new BizException("该目录下已存在同名文件夹");
         }
 
         KnowledgeFolder folder = new KnowledgeFolder();
@@ -106,26 +107,26 @@ public class KnowledgeFolderServiceImpl implements KnowledgeFolderService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteFolder(Long folderId, Long userId) {
         if (folderId == null || folderId == 0L) {
-            throw new RuntimeException("根目录不允许删除");
+            throw new BizException("根目录不允许删除");
         }
 
         KnowledgeFolder folder = folderMapper.selectById(folderId);
         if (folder == null || !folder.getUserId().equals(userId)) {
-            throw new RuntimeException("文件夹不存在或无权访问");
+            throw new BizException("文件夹不存在或无权访问");
         }
 
         LambdaQueryWrapper<KnowledgeDoc> docWrapper = new LambdaQueryWrapper<>();
         docWrapper.eq(KnowledgeDoc::getFolderId, folderId)
                   .eq(KnowledgeDoc::getDeleted, 0);
         if (docMapper.selectCount(docWrapper) > 0) {
-            throw new RuntimeException("该目录下还有文档，请先删除文档");
+            throw new BizException("该目录下还有文档，请先删除文档");
         }
 
         LambdaQueryWrapper<KnowledgeFolder> subWrapper = new LambdaQueryWrapper<>();
         subWrapper.eq(KnowledgeFolder::getParentId, folderId)
                   .eq(KnowledgeFolder::getStatus, 1);
         if (folderMapper.selectCount(subWrapper) > 0) {
-            throw new RuntimeException("该目录下还有子目录，请先删除子目录");
+            throw new BizException("该目录下还有子目录，请先删除子目录");
         }
 
         folder.setStatus(0);

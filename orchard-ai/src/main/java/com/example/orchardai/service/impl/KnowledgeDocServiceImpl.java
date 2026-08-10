@@ -13,6 +13,7 @@ import com.example.orchardai.mapper.KnowledgeDocMapper;
 import com.example.orchardai.service.KnowledgeDocService;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import com.example.orchardcommon.result.PageResult;
 import com.example.orchardfile.service.FileUploadService;
 import com.example.orchardfile.vo.FileUploadVo;
@@ -37,10 +38,10 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
     @Override
     public KnowledgeDocVo upload(MultipartFile file, Long folderId, Long userId) {
         if (userId == null) {
-            throw new RuntimeException("用户ID不能为空");
+            throw new BizException("用户ID不能为空");
         }
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("上传文件不能为空");
+            throw new BizException("上传文件不能为空");
         }
 
         // 1. 直接上传到COS（folderId=null → 只传COS，不写 file_record 表，因为知识库文档信息存 knowledge_doc）
@@ -74,7 +75,7 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
     public void updateStatus(KnowledgeDocStatusUpdateDto dto) {
         KnowledgeDoc doc = knowledgeDocMapper.selectById(dto.getId());
         if (doc == null) {
-            throw new RuntimeException("文档不存在");
+            throw new BizException("文档不存在");
         }
         doc.setStatus(dto.getStatus());
         if (dto.getChunkCount() != null) {
@@ -126,10 +127,10 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
     public void delete(Long id, Long userId) {
         KnowledgeDoc doc = knowledgeDocMapper.selectById(id);
         if (doc == null) {
-            throw new RuntimeException("文档不存在");
+            throw new BizException("文档不存在");
         }
         if (!doc.getUserId().equals(userId)) {
-            throw new RuntimeException("无权删除该文档");
+            throw new BizException("无权删除该文档");
         }
         //没入库就不同步删向量库
         if(doc.getStatus() == DocStatusEnum.COMPLETED.getCode()){
@@ -145,14 +146,14 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
     public void retry(Long id, Long userId) {
         KnowledgeDoc doc = knowledgeDocMapper.selectById(id);
         if (doc == null) {
-            throw new RuntimeException("文档不存在");
+            throw new BizException("文档不存在");
         }
         if (!doc.getUserId().equals(userId)) {
-            throw new RuntimeException("无权重试该文档");
+            throw new BizException("无权重试该文档");
         }
         int current = doc.getStatus() == null ? DocStatusEnum.PENDING.getCode() : doc.getStatus();
         if (current == DocStatusEnum.PROCESSING.getCode() || current == DocStatusEnum.COMPLETED.getCode()) {
-            throw new RuntimeException("仅待处理或失败的文档可以重试");
+            throw new BizException("仅待处理或失败的文档可以重试");
         }
         // 重置为待处理并清空旧失败信息，重新触发 Agent 向量化
         doc.setStatus(DocStatusEnum.PENDING.getCode());
@@ -171,10 +172,10 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
     public KnowledgeDocVo getById(Long id, Long userId) {
         KnowledgeDoc doc = knowledgeDocMapper.selectById(id);
         if (doc == null) {
-            throw new RuntimeException("文档不存在");
+            throw new BizException("文档不存在");
         }
         if (!doc.getUserId().equals(userId)) {
-            throw new RuntimeException("无权查看该文档");
+            throw new BizException("无权查看该文档");
         }
         return toVo(doc);
     }

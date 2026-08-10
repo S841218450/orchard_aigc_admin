@@ -1,12 +1,15 @@
 package com.example.orchardai.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.orchardai.dto.AttachmentDto;
+import com.example.orchardai.dto.ChatMessageQuery;
 import com.example.orchardai.dto.ChatMessageVo;
 import com.example.orchardai.entity.ChatMessage;
 import com.example.orchardai.mapper.ChatMessageMapper;
 import com.example.orchardai.service.ChatMessageService;
+import com.example.orchardcommon.result.PageResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,6 @@ import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,11 +28,13 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<ChatMessageVo> listBySessionId(Long sessionId) {
+    public PageResult<ChatMessageVo> pageBySessionId(ChatMessageQuery query) {
         LambdaQueryWrapper<ChatMessage> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ChatMessage::getSessionId, sessionId)
+        wrapper.eq(ChatMessage::getSessionId, query.getSessionId())
                .orderByAsc(ChatMessage::getCreateTime);
-        return list(wrapper).stream().map(this::toVo).collect(Collectors.toList());
+        Page<ChatMessage> page = new Page<>(query.getPageNum(), query.getPageSize());
+        Page<ChatMessage> result = page(page, wrapper);
+        return PageResult.of(result, this::toVo);
     }
 
     private ChatMessageVo toVo(ChatMessage msg) {

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -24,4 +25,7 @@ public class AiWorkCreateDto {
 
     @Schema(description = "参数，如 style/imageProportion/imageQuality/imageCount")
     private Map<String, Object> params;
+
+    @Schema(description = "原图列表（图生图参考图，元素为{id,url}）")
+    private List<ImageItem> originImageList;
 }

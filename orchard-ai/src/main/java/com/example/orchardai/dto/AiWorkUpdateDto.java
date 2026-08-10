@@ -18,6 +18,6 @@ public class AiWorkUpdateDto {
     @Schema(description = "结果URL")
     private String resultUrl;
 
-    @Schema(description = "结果数据列表（多图场景）")
-    private List<String> dataList;
+    @Schema(description = "结果数据列表（追加到已有图片之后，元素为{id,url}）")
+    private List<ImageItem> dataList;
 }

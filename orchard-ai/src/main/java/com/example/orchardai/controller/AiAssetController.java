@@ -6,6 +6,7 @@ import com.example.orchardai.dto.AiAssetQuery;
 import com.example.orchardai.dto.AiAssetVo;
 import com.example.orchardai.service.AiAssetService;
 import com.example.orchardcommon.annotation.PublicApi;
+import com.example.orchardcommon.dto.IdDto;
 import com.example.orchardcommon.result.PageResult;
 import com.example.orchardcommon.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,19 +42,19 @@ public class AiAssetController {
     @PublicApi
     @Operation(summary = "获取素材详情")
     @PostMapping("/getAssetDetail")
-    public Result<AiAssetVo> detail(@Valid @RequestBody AiAssetIdDto dto) {
+    public Result<AiAssetVo> detail(@Valid @RequestBody IdDto dto) {
         return Result.ok(aiAssetService.getDetail(dto.getId()));
     }
 
     @Operation(summary = "点赞/取消点赞")
     @PostMapping("/likeAsset")
-    public Result<AiAssetVo> like(@Valid @RequestBody AiAssetIdDto dto) {
+    public Result<AiAssetVo> like(@Valid @RequestBody IdDto dto) {
         return Result.ok(aiAssetService.like(dto.getId()));
     }
 
     @Operation(summary = "删除素材")
     @PostMapping("/deleteAsset")
-    public Result<Void> delete(@Valid @RequestBody AiAssetIdDto dto) {
+    public Result<Void> delete(@Valid @RequestBody IdDto dto) {
         aiAssetService.delete(dto.getId());
         return Result.ok();
     }

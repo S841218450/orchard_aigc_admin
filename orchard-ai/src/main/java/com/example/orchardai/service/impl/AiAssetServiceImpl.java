@@ -17,6 +17,7 @@ import com.example.orchardai.service.AiAssetService;
 import com.example.orchardai.service.AiWorkService;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import com.example.orchardcommon.result.PageResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -49,16 +50,16 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         Long userId = getCurrentUserId();
         AiWork work = aiWorkService.getById(dto.getWorkId());
         if (work == null) {
-            throw new RuntimeException("作品不存在");
+            throw new BizException("作品不存在");
         }
         if (!work.getUserId().equals(userId)) {
-            throw new RuntimeException("无权收录该作品");
+            throw new BizException("无权收录该作品");
         }
         if (work.getStatus() != WorkStatusEnum.COMPLETED.getCode()) {
-            throw new RuntimeException("仅已完成的作品可收录为素材");
+            throw new BizException("仅已完成的作品可收录为素材");
         }
         if (!StringUtils.hasText(work.getResultUrl())) {
-            throw new RuntimeException("作品暂无可用素材地址");
+            throw new BizException("作品暂无可用素材地址");
         }
 
         AiAsset asset = new AiAsset();
@@ -87,7 +88,7 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
     public AiAssetVo getDetail(Long id) {
         AiAssetRow row = baseMapper.selectDetailWithAuthor(id);
         if (row == null) {
-            throw new RuntimeException("素材不存在");
+            throw new BizException("素材不存在");
         }
         return toVo(row, isLiked(id, getCurrentUserId()));
     }
@@ -114,11 +115,11 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
     public AiAssetVo like(Long id) {
         Long userId = getCurrentUserId();
         if (userId == null) {
-            throw new RuntimeException("请先登录");
+            throw new BizException("请先登录");
         }
         AiAsset asset = getById(id);
         if (asset == null) {
-            throw new RuntimeException("素材不存在");
+            throw new BizException("素材不存在");
         }
 
         AiAssetLike like = aiAssetLikeMapper.selectOne(new LambdaQueryWrapper<AiAssetLike>()
@@ -152,10 +153,10 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         Long userId = getCurrentUserId();
         AiAsset asset = getById(id);
         if (asset == null) {
-            throw new RuntimeException("素材不存在");
+            throw new BizException("素材不存在");
         }
         if (!asset.getUserId().equals(userId)) {
-            throw new RuntimeException("无权删除该素材");
+            throw new BizException("无权删除该素材");
         }
         removeById(id);
     }
