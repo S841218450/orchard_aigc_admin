@@ -1,5 +1,6 @@
 package com.example.orchardai.controller;
 
+import com.example.orchardai.client.AgentApiClient;
 import com.example.orchardai.dto.ChatSessionDto;
 import com.example.orchardai.dto.ChatSessionIdDto;
 import com.example.orchardai.dto.ChatSessionVo;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ChatSessionController {
 
     private final ChatSessionService chatSessionService;
+    private final AgentApiClient agentApiClient;
 
     @Operation(summary = "创建会话")
     @PostMapping("/add")
@@ -41,6 +43,8 @@ public class ChatSessionController {
     @Operation(summary = "删除会话")
     @PostMapping("/delete")
     public Result<Void> delete(@Valid @RequestBody ChatSessionIdDto dto) {
+        // 先通知 Agent 清除会话记忆，成功后本地才删除，保证 Agent 记忆不残留
+        agentApiClient.clearMemory(dto.getId().toString());
         chatSessionService.removeById(dto.getId());
         return Result.ok();
     }

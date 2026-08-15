@@ -14,6 +14,9 @@ public class AiAssetCreateDto {
     @Schema(description = "来源作品ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long workId;
 
+    @Schema(description = "指定作品dataList中的图片ID（不传则默认收录resultUrl对应图片）")
+    private Long imageId;
+
     @Schema(description = "标签列表")
     private List<String> tags;
 }

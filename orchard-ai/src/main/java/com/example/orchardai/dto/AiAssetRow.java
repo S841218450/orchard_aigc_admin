@@ -21,6 +21,9 @@ public class AiAssetRow {
     @Schema(description = "作者昵称")
     private String authorName;
 
+    @Schema(description = "作者头像")
+    private String authorAvatar;
+
     @Schema(description = "素材类型：image-图片 video-视频")
     private String type;
 

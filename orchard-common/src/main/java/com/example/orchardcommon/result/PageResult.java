@@ -21,11 +21,15 @@ public class PageResult<T> {
     @Schema(description = "当前页码")
     private int current;
 
+    @Schema(description = "数据总数")
+    private int total;
+
     public static <T> PageResult<T> of(Page<T> page) {
         PageResult<T> result = new PageResult<>();
         result.setList(page.getRecords());
         result.setSize((int) page.getSize());
         result.setCurrent((int) page.getCurrent());
+        result.setTotal((int)page.getTotal());
         return result;
     }
 
@@ -34,6 +38,7 @@ public class PageResult<T> {
         result.setList(page.getRecords().stream().map(converter).collect(Collectors.toList()));
         result.setSize((int) page.getSize());
         result.setCurrent((int) page.getCurrent());
+        result.setTotal((int)page.getTotal());
         return result;
     }
 }

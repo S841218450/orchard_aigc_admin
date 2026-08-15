@@ -24,6 +24,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,7 +45,32 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
         if (file == null || file.isEmpty()) {
             throw new BizException("上传文件不能为空");
         }
+        return uploadOne(file, folderId, userId);
+    }
 
+    @Override
+    public List<KnowledgeDocVo> uploadBatch(List<MultipartFile> files, Long folderId, Long userId) {
+        if (userId == null) {
+            throw new BizException("用户ID不能为空");
+        }
+        if (files == null || files.isEmpty()) {
+            throw new BizException("上传文件不能为空");
+        }
+        List<KnowledgeDocVo> result = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) {
+                log.warn("批量上传跳过空文件：userId={}", userId);
+                continue;
+            }
+            result.add(uploadOne(file, folderId, userId));
+        }
+        return result;
+    }
+
+    /**
+     * 单文件上传：传COS → 落库knowledge_doc → 异步触发Agent向量化
+     */
+    private KnowledgeDocVo uploadOne(MultipartFile file, Long folderId, Long userId) {
         // 1. 直接上传到COS（folderId=null → 只传COS，不写 file_record 表，因为知识库文档信息存 knowledge_doc）
         FileUploadVo cosResult = fileUploadService.uploadFile(file, userId, null);
 
@@ -65,7 +92,7 @@ public class KnowledgeDocServiceImpl implements KnowledgeDocService {
         log.info("知识库文档上传成功：id={}, fileName={}, userId={}, folderId={}, fileSize={}",
                 doc.getId(), doc.getFileName(), userId, folderId, doc.getFileSize());
 
-        // 异步触发 Agent 分割 + 向量化入库（不阻塞上传响应，Agent 处理完回调 /status）
+        // 3. 异步触发 Agent 分割 + 向量化入库（不阻塞上传响应，Agent 处理完回调 /status）
         agentIngestTrigger.trigger(doc);
 
         return toVo(doc);

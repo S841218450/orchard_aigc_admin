@@ -14,4 +14,7 @@ public class ChatSessionDto {
     @NotBlank(message = "会话标题不能为空")
     @Schema(description = "会话标题")
     private String title;
+
+    @Schema(description = "第一条用户消息（创建时携带，用于触发 Agent 异步生成更精准的标题，可选）")
+    private String question;
 }

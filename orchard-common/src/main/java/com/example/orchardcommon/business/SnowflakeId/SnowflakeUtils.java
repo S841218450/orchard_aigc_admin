@@ -53,10 +53,10 @@ public class SnowflakeUtils {
 
         lastTimestamp = now;
 
-        // 生成 19位 雪花ID
-        return ((now - EPOCH) << 22)
-                | ((bizCode & 0xFFFFL) << 6)
-                | (workerId & 0x3F);
+        // 生成 19位 雪花ID：业务码置于最高位（业务码+时间戳+随机数），同一业务类型ID前几位固定
+        return ((long) (bizCode & 0xFFFFL) << 46)
+                | ((now - EPOCH) << 10)
+                | (workerId & 0x3FF);
     }
 
     private static long nextMillis(long last) {

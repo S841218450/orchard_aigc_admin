@@ -48,8 +48,9 @@ public class AiAssetController {
 
     @Operation(summary = "点赞/取消点赞")
     @PostMapping("/likeAsset")
-    public Result<AiAssetVo> like(@Valid @RequestBody IdDto dto) {
-        return Result.ok(aiAssetService.like(dto.getId()));
+    public Result<Void> like(@Valid @RequestBody IdDto dto) {
+        aiAssetService.like(dto.getId());
+        return Result.ok();
     }
 
     @Operation(summary = "删除素材")

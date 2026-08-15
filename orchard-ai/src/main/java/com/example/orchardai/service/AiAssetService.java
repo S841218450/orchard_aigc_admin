@@ -15,7 +15,7 @@ public interface AiAssetService extends IService<AiAsset> {
 
     PageResult<AiAssetVo> page(AiAssetQuery query);
 
-    AiAssetVo like(Long id);
+    void like(Long id);
 
     void delete(Long id);
 }

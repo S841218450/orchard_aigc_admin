@@ -39,6 +39,15 @@ public class KnowledgeDocController {
         return Result.ok(knowledgeDocService.upload(file, folderId, userId));
     }
 
+    @Operation(summary = "批量上传知识库文档（多个文件 + 目录ID，同一目录）")
+    @PostMapping(value = "/uploadBatch", consumes = "multipart/form-data")
+    public Result<List<KnowledgeDocVo>> uploadBatch(
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestParam(value = "folderId", required = false) Long folderId) {
+        Long userId = getCurrentUserId();
+        return Result.ok(knowledgeDocService.uploadBatch(files, folderId, userId));
+    }
+
     @InternalApi
     @Operation(summary = "状态回调（Agent调用）")
     @PutMapping("/status")

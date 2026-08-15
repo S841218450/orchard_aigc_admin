@@ -10,6 +10,7 @@ import com.example.orchardai.dto.AiAssetVo;
 import com.example.orchardai.entity.AiAsset;
 import com.example.orchardai.entity.AiAssetLike;
 import com.example.orchardai.entity.AiWork;
+import com.example.orchardai.dto.ImageItem;
 import com.example.orchardai.enums.WorkStatusEnum;
 import com.example.orchardai.mapper.AiAssetLikeMapper;
 import com.example.orchardai.mapper.AiAssetMapper;
@@ -33,6 +34,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,7 +60,12 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         if (work.getStatus() != WorkStatusEnum.COMPLETED.getCode()) {
             throw new BizException("仅已完成的作品可收录为素材");
         }
-        if (!StringUtils.hasText(work.getResultUrl())) {
+        // 指定图片ID则取作品图片列表中对应图片，否则默认取resultUrl
+        String assetUrl = work.getResultUrl();
+        if (dto.getImageId() != null) {
+            assetUrl = getImageUrlById(work, dto.getImageId());
+        }
+        if (!StringUtils.hasText(assetUrl)) {
             throw new BizException("作品暂无可用素材地址");
         }
 
@@ -68,7 +75,7 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         asset.setType(work.getType());
         asset.setPrompt(work.getPrompt());
         asset.setParams(work.getParams());
-        asset.setUrl(work.getResultUrl());
+        asset.setUrl(assetUrl);
         asset.setLikeCount(0);
         asset.setCreateTime(LocalDateTime.now());
         if (dto.getTags() != null && !dto.getTags().isEmpty()) {
@@ -112,7 +119,7 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
 
     @Override
     @Transactional
-    public AiAssetVo like(Long id) {
+    public void like(Long id) {
         Long userId = getCurrentUserId();
         if (userId == null) {
             throw new BizException("请先登录");
@@ -143,9 +150,6 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         }
         asset.setUpdateTime(LocalDateTime.now());
         updateById(asset);
-
-        AiAssetRow row = baseMapper.selectDetailWithAuthor(id);
-        return toVo(row, !likedSet(List.of(id), userId).isEmpty());
     }
 
     @Override
@@ -161,14 +165,30 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         removeById(id);
     }
 
+    /**
+     * 解析 params 字段：DB 存的是 JSON 字符串，VO 返回结构化对象
+     */
+    private Map<String, Object> parseParams(String params) {
+        if (params == null) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(params, new TypeReference<Map<String, Object>>() {});
+        } catch (JsonProcessingException e) {
+            log.error("反序列化params失败", e);
+            return null;
+        }
+    }
+
     private AiAssetVo toVo(AiAssetRow row, boolean liked) {
         AiAssetVo vo = new AiAssetVo();
         vo.setId(row.getId());
         vo.setUserId(row.getUserId());
         vo.setAuthorName(row.getAuthorName());
+        vo.setAuthorAvatar(row.getAuthorAvatar());
         vo.setType(row.getType());
         vo.setPrompt(row.getPrompt());
-        vo.setParams(row.getParams());
+        vo.setParams(parseParams(row.getParams()));
         vo.setUrl(row.getUrl());
         vo.setLikeCount(row.getLikeCount());
         vo.setLiked(liked);
@@ -182,6 +202,26 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
             }
         }
         return vo;
+    }
+
+    /**
+     * 按图片ID从作品的dataList中查找对应图片URL
+     */
+    private String getImageUrlById(AiWork work, Long imageId) {
+        if (!StringUtils.hasText(work.getDataList())) {
+            throw new BizException("作品暂无图片列表");
+        }
+        try {
+            List<ImageItem> items = objectMapper.readValue(work.getDataList(), new TypeReference<List<ImageItem>>() {});
+            return items.stream()
+                    .filter(item -> imageId.equals(item.getId()))
+                    .map(ImageItem::getUrl)
+                    .findFirst()
+                    .orElseThrow(() -> new BizException("作品中不存在该图片"));
+        } catch (JsonProcessingException e) {
+            log.error("解析作品图片列表失败", e);
+            throw new BizException("作品图片数据异常");
+        }
     }
 
     /**

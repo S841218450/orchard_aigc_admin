@@ -2,14 +2,17 @@ package com.example.orchardai.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.orchardai.client.AgentApiClient;
 import com.example.orchardai.dto.ChatSessionDto;
 import com.example.orchardai.dto.ChatSessionVo;
 import com.example.orchardai.entity.ChatSession;
 import com.example.orchardai.mapper.ChatSessionMapper;
 import com.example.orchardai.service.ChatSessionService;
 import com.example.orchardcommon.exception.BizException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -19,7 +22,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatSession> implements ChatSessionService {
+
+    private final AgentApiClient agentApiClient;
 
     @Override
     public ChatSessionVo add(Long sessionId, ChatSessionDto dto) {
@@ -32,6 +38,10 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         session.setStatus(1);
         session.setCreateTime(LocalDateTime.now());
         save(session);
+        // 携带第一条消息触发 Agent 异步生成更精准的标题（失败不影响流程）
+        if (StringUtils.hasText(dto.getQuestion())) {
+            agentApiClient.generateTitle(sessionId.toString(), dto.getQuestion());
+        }
         return toVo(session);
     }
 

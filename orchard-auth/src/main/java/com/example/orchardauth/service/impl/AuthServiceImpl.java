@@ -11,6 +11,7 @@ import com.example.orchardauth.vo.LoginVo;
 import com.example.orchardauth.vo.UserInfoVo;
 import com.example.orchardcommon.business.SnowflakeId.BizCodeEnum;
 import com.example.orchardcommon.business.SnowflakeId.SnowflakeUtils;
+import com.example.orchardcommon.exception.BizException;
 import com.example.orchardusermanagement.entity.User;
 import com.example.orchardusermanagement.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.selectOne(wrapper);
         
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BizException("用户不存在");
         }
 
         // 解密前端传来的 RSA 加密密码
@@ -47,12 +48,12 @@ public class AuthServiceImpl implements AuthService {
 
         // 验证密码（BCrypt）
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new RuntimeException("密码错误");
+            throw new BizException("密码错误");
         }
 
         // 检查状态
         if (user.getStatus() != 1) {
-            throw new RuntimeException("账号已被禁用");
+            throw new BizException("账号已被禁用");
         }
 
         // 更新最后登录时间
@@ -86,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 检查状态
         if (user.getStatus() != 1) {
-            throw new RuntimeException("账号已被禁用");
+            throw new BizException("账号已被禁用");
         }
 
         // 更新最后登录时间
@@ -105,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getPhone, dto.getPhone());
         if (userMapper.selectCount(wrapper) > 0) {
-            throw new RuntimeException("该手机号已注册");
+            throw new BizException("该手机号已注册");
         }
 
         // 创建用户
@@ -128,13 +129,13 @@ public class AuthServiceImpl implements AuthService {
 
         // 验证 Refresh Token
         if (!jwtUtil.validateToken(refreshToken)) {
-            throw new RuntimeException("刷新Token无效或已过期");
+            throw new BizException("刷新Token无效或已过期");
         }
 
         // 检查是否为 Refresh Token
         String tokenType = jwtUtil.getTokenType(refreshToken);
         if (!"refresh".equals(tokenType)) {
-            throw new RuntimeException("无效的刷新Token");
+            throw new BizException("无效的刷新Token");
         }
 
         // 获取用户信息
@@ -144,12 +145,12 @@ public class AuthServiceImpl implements AuthService {
         // 查找用户
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BizException("用户不存在");
         }
 
         // 检查状态
         if (user.getStatus() != 1) {
-            throw new RuntimeException("账号已被禁用");
+            throw new BizException("账号已被禁用");
         }
 
         // 将旧的 Refresh Token 加入黑名单
@@ -177,7 +178,7 @@ public class AuthServiceImpl implements AuthService {
     public UserInfoVo getUserInfo(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BizException("用户不存在");
         }
 
         UserInfoVo vo = new UserInfoVo();
@@ -200,13 +201,13 @@ public class AuthServiceImpl implements AuthService {
         wrapper.eq(User::getPhone, dto.getPhone());
         User existUser = userMapper.selectOne(wrapper);
         if (existUser != null && !existUser.getId().equals(userId)) {
-            throw new RuntimeException("该手机号已被其他账号绑定");
+            throw new BizException("该手机号已被其他账号绑定");
         }
 
         // 绑定手机号
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BizException("用户不存在");
         }
         user.setPhone(dto.getPhone());
         user.setUpdateTime(LocalDateTime.now());

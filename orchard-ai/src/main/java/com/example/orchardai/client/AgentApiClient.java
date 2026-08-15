@@ -4,6 +4,7 @@ import com.example.orchardai.dto.AgentBatchDeleteRequest;
 import com.example.orchardai.dto.AgentIngestRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import com.example.orchardcommon.exception.BizException;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,8 @@ import org.springframework.web.client.RestClient;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Agent（Python）端 API 客户端
@@ -28,6 +31,12 @@ public class AgentApiClient {
 
     /** Agent 文档向量化入库接口 */
     private static final String INGEST_PATH = "/ai-api/v1/knowledge-base/internal/documents";
+    /** Agent 会话记忆清除接口 */
+    private static final String MEMORY_CLEAR_PATH = "/internal/memory/clear";
+    /** Agent 消息记忆删除接口 */
+    private static final String MEMORY_MESSAGES_DELETE_PATH = "/internal/memory/messages/delete";
+    /** Agent 会话标题生成接口 */
+    private static final String MEMORY_TITLE_PATH = "/internal/memory/title";
 
     private final RestClient restClient;
 
@@ -80,6 +89,69 @@ public class AgentApiClient {
             return;
         }
         log.info("已删除 Agent 知识库向量：docId={}", docId);
+    }
+
+    /**
+     * 通知 Agent 清除会话记忆（删除会话时同步调用）
+     * Agent 删除失败时抛 {@link BizException} 阻断本地删除，保证会话记忆不残留。
+     *
+     * @param threadId 会话ID（对应 Agent 的 thread_id）
+     */
+    public void clearMemory(String threadId) {
+        try {
+            restClient.post()
+                    .uri(MEMORY_CLEAR_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("threadId", threadId))
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("已通知 Agent 清除会话记忆：threadId={}", threadId);
+        } catch (Exception e) {
+            log.error("通知 Agent 清除会话记忆失败：threadId={}", threadId, e);
+            throw new BizException("Agent 会话记忆清除失败，请稍后重试");
+        }
+    }
+
+    /**
+     * 通知 Agent 异步生成会话标题（新建会话携带第一条消息调用）
+     * Agent 端 LLM 提炼标题后回调 Java 保存，本接口立即返回、不阻塞首条对话。
+     * 失败仅记日志不抛异常，不影响会话创建。
+     *
+     * @param threadId 会话ID
+     * @param question 第一条用户消息
+     */
+    public void generateTitle(String threadId, String question) {
+        try {
+            restClient.post()
+                    .uri(MEMORY_TITLE_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("threadId", threadId, "question", question))
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("已通知 Agent 生成会话标题：threadId={}", threadId);
+        } catch (Exception e) {
+            log.error("通知 Agent 生成会话标题失败：threadId={}", threadId, e);
+        }
+    }
+
+    /**
+     * 通知 Agent 删除指定消息的记忆（删除消息时同步调用）
+     * 失败仅记日志不抛异常，避免 Agent 不可用时阻断用户删除消息。
+     *
+     * @param messageIds 用户消息ID列表
+     */
+    public void deleteMessages(List<String> messageIds) {
+        try {
+            restClient.post()
+                    .uri(MEMORY_MESSAGES_DELETE_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("messageIds", messageIds))
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("已通知 Agent 删除消息记忆：messageIds={}", messageIds);
+        } catch (Exception e) {
+            log.error("通知 Agent 删除消息记忆失败：messageIds={}", messageIds, e);
+        }
     }
 
 }

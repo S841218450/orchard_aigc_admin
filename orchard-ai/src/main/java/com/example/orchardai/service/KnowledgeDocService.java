@@ -6,6 +6,8 @@ import com.example.orchardai.dto.KnowledgeDocVo;
 import com.example.orchardcommon.result.PageResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface KnowledgeDocService {
 
     /**
@@ -16,6 +18,15 @@ public interface KnowledgeDocService {
      * @param userId   当前用户ID
      */
     KnowledgeDocVo upload(MultipartFile file, Long folderId, Long userId);
+
+    /**
+     * 批量上传知识库文档（每个文件独立走"传COS→落库→触发Agent"流程）
+     *
+     * @param files    文件列表
+     * @param folderId 知识库目录ID（null或0 = 根目录，整批统一）
+     * @param userId   当前用户ID
+     */
+    List<KnowledgeDocVo> uploadBatch(List<MultipartFile> files, Long folderId, Long userId);
 
     void updateStatus(KnowledgeDocStatusUpdateDto dto);
 
