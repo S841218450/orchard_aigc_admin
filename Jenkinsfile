@@ -68,8 +68,18 @@ pipeline {
                                 exit 1
                             fi
 
-                            docker image prune -f
                             echo "✅ 服务正常运行"
+
+                            echo "==== 清理历史版本镜像（保留最近2个版本 + latest）===="
+                            KEEP=2
+                            docker images --format '{{.Repository}}:{{.Tag}}' \
+                                | grep "^${SPRING_IMAGE}:" | grep -v ":latest" \
+                                | sort -V -r | tail -n +\$((KEEP + 1)) \
+                                | xargs -r docker rmi || true
+                            echo "==== 当前 orchard2026 镜像 ===="
+                            docker images ${SPRING_IMAGE}
+
+                            docker image prune -f
                         """
                     } else {
                         println("❌ 非main分支，跳过部署")
