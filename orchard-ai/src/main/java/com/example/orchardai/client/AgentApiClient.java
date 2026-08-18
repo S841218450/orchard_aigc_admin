@@ -30,7 +30,7 @@ import java.util.Map;
 public class AgentApiClient {
 
     /** Agent 文档向量化入库接口 */
-    private static final String INGEST_PATH = "knowledge-base/internal/documents";
+    private static final String INGEST_PATH = "/knowledge-base/internal/documents";
     /** Agent 会话记忆清除接口 */
     private static final String MEMORY_CLEAR_PATH = "/internal/memory/clear";
     /** Agent 消息记忆删除接口 */
