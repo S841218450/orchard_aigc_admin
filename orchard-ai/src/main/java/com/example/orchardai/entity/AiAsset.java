@@ -15,6 +15,12 @@ public class AiAsset extends baseEntity {
     @Schema(description = "作者用户ID")
     private Long userId;
 
+    @Schema(description = "来源作品ID")
+    private Long workId;
+
+    @Schema(description = "来源作品图片ID（0表示默认封面）")
+    private Long imageId;
+
     @Schema(description = "素材类型：image-图片 video-视频")
     private String type;
 

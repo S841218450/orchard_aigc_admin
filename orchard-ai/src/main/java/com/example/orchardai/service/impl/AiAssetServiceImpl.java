@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -72,6 +73,8 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
         AiAsset asset = new AiAsset();
         asset.setId(SnowflakeUtils.nextId(BizCodeEnum.ASSET));
         asset.setUserId(userId);
+        asset.setWorkId(dto.getWorkId());
+        asset.setImageId(dto.getImageId() == null ? 0L : dto.getImageId());
         asset.setType(work.getType());
         asset.setPrompt(work.getPrompt());
         asset.setParams(work.getParams());
@@ -86,7 +89,11 @@ public class AiAssetServiceImpl extends ServiceImpl<AiAssetMapper, AiAsset> impl
             }
         }
 
-        save(asset);
+        try {
+            save(asset);
+        } catch (DuplicateKeyException e) {
+            throw new BizException("该作品已收录，请勿重复提交");
+        }
         AiAssetRow row = baseMapper.selectDetailWithAuthor(asset.getId());
         return toVo(row, false);
     }

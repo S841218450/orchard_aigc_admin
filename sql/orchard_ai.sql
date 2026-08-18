@@ -35,6 +35,8 @@ CREATE TABLE `t_chat_message` (
 CREATE TABLE `t_ai_asset` (
   `id` bigint NOT NULL COMMENT '主键ID（雪花）',
   `user_id` bigint NOT NULL COMMENT '作者用户ID',
+  `work_id` bigint NOT NULL DEFAULT 0 COMMENT '来源作品ID',
+  `image_id` bigint NOT NULL DEFAULT 0 COMMENT '来源作品图片ID（0=默认封面）',
   `type` varchar(20) NOT NULL COMMENT '素材类型：image-图片 video-视频',
   `prompt` text DEFAULT NULL COMMENT '提示词',
   `params` text DEFAULT NULL COMMENT '参数JSON（模型/尺寸等）',
@@ -47,6 +49,7 @@ CREATE TABLE `t_ai_asset` (
   `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
   `deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_work_image` (`user_id`, `work_id`, `image_id`, `deleted`),
   KEY `idx_user_id` (`user_id`),
   KEY `idx_type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='AI素材表';
@@ -87,3 +90,12 @@ CREATE TABLE `t_ai_work` (
   PRIMARY KEY (`id`),
   KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='AI作品表';
+
+-- ============================================================
+-- 存量库升级脚本（已存在的库执行，新库无需执行：上方CREATE TABLE已含新列）
+-- 素材防重复收录：来源作品/图片标识 + 用户级唯一索引
+-- ============================================================
+ALTER TABLE `t_ai_asset`
+  ADD COLUMN `work_id` bigint NOT NULL DEFAULT 0 COMMENT '来源作品ID' AFTER `user_id`,
+  ADD COLUMN `image_id` bigint NOT NULL DEFAULT 0 COMMENT '来源作品图片ID（0=默认封面）' AFTER `work_id`,
+  ADD UNIQUE KEY `uk_user_work_image` (`user_id`, `work_id`, `image_id`, `deleted`);
