@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # ====================== 阶段1：Maven 构建多模块项目 ======================
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
@@ -12,16 +13,16 @@ COPY orchard-ai/pom.xml orchard-ai/
 COPY orchard-auth/pom.xml orchard-auth/
 COPY orchard-file/pom.xml orchard-file/
 
-# 提前拉取全部依赖，离线构建
-RUN mvn dependency:go-offline -B
+# 提前拉取全部依赖，离线构建（--mount=type=cache 挂载宿主机Maven仓库，跨构建持久缓存）
+RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
 
 # 复制完整源码
 COPY . .
 
 # 构建参数：指定要打包的微服务模块，默认 orchard-service
 ARG MODULE=orchard-service
-# -pl 指定模块，-am 自动构建该模块依赖的子模块（common等）
-RUN mvn clean package -pl ${MODULE} -am -DskipTests -B
+# -pl 指定模块，-am 自动构建该模块依赖的子模块（common等）；-T 1C 多核并行编译
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -T 1C -pl ${MODULE} -am -DskipTests -B
 
 # ====================== 阶段2：轻量运行镜像 ======================
 FROM eclipse-temurin:21-jre-alpine

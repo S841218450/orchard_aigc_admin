@@ -25,7 +25,7 @@ pipeline {
         stage('构建Docker镜像') {
             steps {
                 sh """
-                    docker build -t ${SPRING_IMAGE}:${SPRING_TAG} \
+                    DOCKER_BUILDKIT=1 docker build -t ${SPRING_IMAGE}:${SPRING_TAG} \
                         --build-arg MODULE=orchard-service .
                     docker tag ${SPRING_IMAGE}:${SPRING_TAG} ${SPRING_IMAGE}:latest
                     echo "✅ 镜像构建完成 ${SPRING_IMAGE}:${SPRING_TAG}"
