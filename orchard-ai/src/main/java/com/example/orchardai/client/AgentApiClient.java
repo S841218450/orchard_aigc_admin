@@ -32,11 +32,11 @@ public class AgentApiClient {
     /** Agent 文档向量化入库接口 */
     private static final String INGEST_PATH = "/knowledge-base/internal/documents";
     /** Agent 会话记忆清除接口 */
-    private static final String MEMORY_CLEAR_PATH = "/internal/memory/clear";
+    private static final String MEMORY_CLEAR_PATH = "/knowledge-base/internal/memory/clear";
     /** Agent 消息记忆删除接口 */
-    private static final String MEMORY_MESSAGES_DELETE_PATH = "/internal/memory/messages/delete";
+    private static final String MEMORY_MESSAGES_DELETE_PATH = "/knowledge-base/internal/memory/messages/delete";
     /** Agent 会话标题生成接口 */
-    private static final String MEMORY_TITLE_PATH = "/internal/memory/title";
+    private static final String MEMORY_TITLE_PATH = "/knowledge-base/internal/memory/title";
 
     private final RestClient restClient;
 
