@@ -87,7 +87,7 @@ oauth:
 # AI Python 服务配置
 ai:
   python:
-    url: http://localhost:8000
+    url: ${AGENT_BASE_URL:http://134.175.217.240/ai-api/v1}
 
 # 腾讯云 COS 配置
 cos:

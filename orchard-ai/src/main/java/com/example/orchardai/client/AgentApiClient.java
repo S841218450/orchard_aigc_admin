@@ -30,7 +30,7 @@ import java.util.Map;
 public class AgentApiClient {
 
     /** Agent 文档向量化入库接口 */
-    private static final String INGEST_PATH = "/ai-api/v1/knowledge-base/internal/documents";
+    private static final String INGEST_PATH = "knowledge-base/internal/documents";
     /** Agent 会话记忆清除接口 */
     private static final String MEMORY_CLEAR_PATH = "/internal/memory/clear";
     /** Agent 消息记忆删除接口 */
@@ -41,7 +41,7 @@ public class AgentApiClient {
     private final RestClient restClient;
 
     public AgentApiClient(
-            @Value("${agent.base-url:http://localhost:8000}") String baseUrl,
+            @Value("${agent.base-url:http://134.175.217.240/ai-api/v1}") String baseUrl,
             @Value("${agent.service-key:${internal.service-key:orchard-agent-secret-key}}") String serviceKey,
             RestClient.Builder builder) {
         JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(
