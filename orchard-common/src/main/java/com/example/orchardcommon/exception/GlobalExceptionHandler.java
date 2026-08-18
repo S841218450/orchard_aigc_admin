@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
     public Result<?> handleBizException(BizException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.warn("[业务异常] {} {} | 错误码: {} | 提示: {}", request.getMethod(), requestURI, e.getCode(), e.getMessage());
+        log.error("[业务异常] {} {} | 错误码: {} | 提示: {}", request.getMethod(), requestURI, e.getCode(), e.getMessage(), e);
         return Result.error(e.getCode(), e.getMessage());
     }
 

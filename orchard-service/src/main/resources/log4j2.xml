@@ -81,6 +81,7 @@
         <Logger name="com.example" level="DEBUG" additivity="false">
             <AppenderRef ref="SqlLog"/>
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="ErrorLog"/>
         </Logger>
 
         <!-- 根日志 -->
